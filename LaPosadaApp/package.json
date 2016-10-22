@@ -9,7 +9,11 @@
   "dependencies": {
     "firebase": "^3.5.1",
     "react": "15.3.2",
-    "react-native": "^0.35.0"
+    "react-native": "^0.35.0",
+    "react-redux": "^4.4.5",
+    "reactfire": "^1.0.0",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0"
   },
   "jest": {
     "preset": "jest-react-native"
