@@ -4,7 +4,7 @@
 // React
 //*************************************************
 import React, { Component, } from 'react'
-import LaPosadaApp from './LaPosadaApp'
+import LaPosadaApp from './LaPosadaApp' 
 
 //*************************************************
 // Redux
@@ -27,5 +27,5 @@ export default class App extends Component {
       </Provider>
     )
   }
-  
+
 }
