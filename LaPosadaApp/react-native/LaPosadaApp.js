@@ -7,6 +7,11 @@ import React, { Component, } from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 //*************************************************
+// Router-flux
+//*************************************************
+import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
+
+//*************************************************
 // Firebase
 //*************************************************
 import * as firebase from 'firebase'
@@ -47,7 +52,7 @@ class LaPosadaApp extends Component {
     listenForItems(itemsRef) {
         itemsRef.on('value', (snap) => {
 
-          //Almacenamos en items la BBDD de Firebase
+          //Formateamos en items la BBDD de Firebase
           var items = [];
           snap.forEach((child) => {
             items.push({
@@ -56,7 +61,7 @@ class LaPosadaApp extends Component {
             })
           })
 
-          console.log('Obtenida BBDD',items)
+          //Almacenamos los items en el store de Redux
           this.props.updateAppData(items)
         })
       }
