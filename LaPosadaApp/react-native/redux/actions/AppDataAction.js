@@ -1,8 +1,59 @@
 import * as types from '../ActionTypes'
 
-export function updateData(data) {
+//*************************************************
+// Firebase
+//*************************************************
+import * as firebase from 'firebase'
+const firebaseConfig = {
+  apiKey: "AIzaSyAZPdz24aSCVeLLYolfiOsa4rg_PkJm4Y4",
+  authDomain: "la-posada-29910.firebaseapp.com",
+  databaseURL: "https://la-posada-29910.firebaseio.com",
+  storageBucket: "la-posada-29910.appspot.com",
+  messagingSenderId: "470755118242"
+}
+const firebaseApp = firebase.initializeApp(firebaseConfig)
+
+//Inicializa la app
+export function initializeApp(){
+  return (dispatch, getState)=>{
+      initializeFirebase(dispatch, getState)
+  }
+}
+
+//Inicializa y configura Firebase
+function initializeFirebase(dispatch, getState){
+  let fbDatabaseRef = firebaseApp.database().ref()
+  let fbStorageRef = firebase.storage().ref()
+  dispatch(updateFirebaseRef(fbDatabaseRef, fbStorageRef))
+
+  fbDatabaseRef.on('value', (snap) => {
+
+    console.log('Datos Recibidos Firebase',snap);
+
+    //Formateamos en items la BBDD de Firebase
+    var items = {};
+    snap.forEach((child) => {
+      items[child.key] = child.val()
+    })
+    console.log('Formateados datos Firebase',items);
+
+    //Almacenamos los items en el store de Redux
+    dispatch(updateData(items))
+  })
+}
+
+//Almacena en el store la referencia a Firebase
+function updateFirebaseRef(fbDatabaseRef){
+  return {
+    type: types.APP_FIREBASE_REFERENCE_UPDATE,
+    fbDatabaseRef:fbDatabaseRef
+  }
+}
+
+//Actualiza en el store los datos de Firebase
+function updateData(fbDataBase) {
   return {
     type: types.APP_DATA_UPDATE,
-    data:data
+    fbDataBase:fbDataBase
   }
 }

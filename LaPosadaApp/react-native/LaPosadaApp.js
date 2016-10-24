@@ -1,122 +1,89 @@
-'use strict'
+'use strict';
 
 //*************************************************
 // React
 //*************************************************
 import React, { Component, } from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, View, Navigator, Platform} from 'react-native'
 
 //*************************************************
 // Router-flux
 //*************************************************
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 
-//*************************************************
-// Firebase
-//*************************************************
-import * as firebase from 'firebase'
-const firebaseConfig = {
-  apiKey: "AIzaSyAZPdz24aSCVeLLYolfiOsa4rg_PkJm4Y4",
-  authDomain: "la-posada-29910.firebaseapp.com",
-  databaseURL: "https://la-posada-29910.firebaseio.com",
-  storageBucket: "la-posada-29910.appspot.com",
-  messagingSenderId: "470755118242"
-};
-const firebaseApp = firebase.initializeApp(firebaseConfig)
 
 //*************************************************
 // Redux
 //*************************************************
 import { connect } from 'react-redux'
 import * as AppDataAction from './redux/actions/AppDataAction'
+import InventaryPage from './components/pages/InventaryPage'
 
+const scenes = Actions.create(
+  <Scene key="root" >
+      <Scene key="inventary" initial={true} component={InventaryPage} title='Inventario'/>
+  </Scene>
+)
 
 class LaPosadaApp extends Component {
 
-  constructor(props) {
+    //Constructor del componente
+    constructor(props) {
       super(props)
+    }
 
-      //Almacenamos la Referencia a firebase
-      this.itemsRef = firebaseApp.database().ref()
+    componentWillMount() {
+      //Apaño para que se vea bien en Android 4
+      if(Platform.OS === 'android' && Platform.Version < 21){
+        Navigator.NavigationBar.Styles.General.NavBarHeight = 40
+      }
     }
 
     componentDidMount() {
-
-      //añadimos el listener de Firebase
-      this.listenForItems(this.itemsRef)
+      this.props.initializeApp()
     }
 
-    //************************************************
-    //Listener de Firebase
-    //************************************************
-    listenForItems(itemsRef) {
-        itemsRef.on('value', (snap) => {
-
-          //Formateamos en items la BBDD de Firebase
-          var items = [];
-          snap.forEach((child) => {
-            items.push({
-              val: child.val(),
-              key: child.key
-            })
-          })
-
-          //Almacenamos los items en el store de Redux
-          this.props.updateAppData(items)
-        })
+    getNavBarOffset(){
+      var offset = 0
+      if (Platform.OS === 'ios'){
+        offset = 20
+      } else if(Platform.OS === 'android' && Platform.Version < 21){
+        offset = 13
+      }else if(Platform.OS === 'android' && Platform.Version >= 21){
+        offset = 0
+      } else{
+        offset = 0
       }
+      return Navigator.NavigationBar.Styles.General.NavBarHeight + offset
+    }
 
+    //Render de React Pinta las pantallas
     render() {
+
       return (
-        <View style={styles.container}>
-          <Text style={styles.welcome}>
-            Bienvenido a React Native!
-          </Text>
-          <Text style={styles.instructions}>
-            La Posada versión inicial
-          </Text>
-          <Text style={styles.instructions}>
-            Press Cmd+R to reload,{'\n'}
-            Cmd+D or shake for dev menu
-          </Text>
-        </View>
-      );
+         <Router
+            ref={(c) => this._router = c}
+            scenes={scenes}
+            sceneStyle={{paddingTop: this.getNavBarOffset()}}
+           />
+      )
     }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
-
 
 /*
 * REDUX
 */
 function mapStateToProps(state) {
+  console.log('mapStateToProps',state);
   return {
-    data:state.appDataState.data,
+    fbDataBase:state.appDataState.fbDataBase,
   }
 }
 
 function mapDispatchToProps(dispatch, props) {
   return {
-    updateAppData:(data)=>{
-      dispatch(AppDataAction.updateData(data))
+    initializeApp:()=>{
+      dispatch(AppDataAction.initializeApp())
     },
     dispatch:dispatch
   };
