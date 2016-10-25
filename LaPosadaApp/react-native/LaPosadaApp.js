@@ -4,7 +4,8 @@
 // React
 //*************************************************
 import React, { Component, } from 'react'
-import {StyleSheet, Text, View, Navigator, Platform} from 'react-native'
+import {StyleSheet, Text, View, Navigator, Platform, TouchableOpacity} from 'react-native'
+
 
 //*************************************************
 // Router-flux
@@ -17,15 +18,30 @@ import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 //*************************************************
 import { connect } from 'react-redux'
 import * as AppDataAction from './redux/actions/AppDataAction'
-import {InventaryPage, InventaryDetailPage} from './components/pages/'
 
+
+//*************************************************
+// Pantallas
+//*************************************************
+import {InventaryPage, InventaryDetailItemPage, InventaryAddItemPage} from './components/pages/'
+import {NavBarIcon} from './components/widgets/'
 const scenes = Actions.create(
   <Scene key="root" >
-      <Scene key="inventary" initial={true} component={InventaryPage} title='Inventario'/>
-      <Scene key="inventaryDetail" component={InventaryDetailPage} title='Detalle'/>
+      <Scene key="inventary" initial={true} component={InventaryPage} title='Inventario'
+            renderRightButton={()=>{
+              return(
+                <NavBarIcon onPress={Actions.inventaryNewItem}/>
+              )
+            }}/>
+      <Scene key="inventaryDetailItem" component={InventaryDetailItemPage} title='Detalle'/>
+      <Scene key="inventaryNewItem" component={InventaryAddItemPage} title='Nuevo elemento'/>
+
   </Scene>
 )
 
+//*************************************************
+// Componente
+//*************************************************
 class LaPosadaApp extends Component {
 
     //Constructor del componente
@@ -51,7 +67,7 @@ class LaPosadaApp extends Component {
       } else if(Platform.OS === 'android' && Platform.Version < 21){
         offset = 13
       }else if(Platform.OS === 'android' && Platform.Version >= 21){
-        offset = 0
+        offset = -2
       } else{
         offset = 0
       }
@@ -75,7 +91,6 @@ class LaPosadaApp extends Component {
 * REDUX
 */
 function mapStateToProps(state) {
-  console.log('mapStateToProps',state);
   return {
     fbDataBase:state.appDataState.fbDataBase,
   }

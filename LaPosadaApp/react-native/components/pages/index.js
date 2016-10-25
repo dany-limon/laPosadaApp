@@ -1,7 +1,9 @@
-import InventaryDetailPage from './InventaryDetailPage'
+import InventaryDetailItemPage from './InventaryDetailItemPage'
 import InventaryPage from './InventaryPage'
+import InventaryAddItemPage from './InventaryAddItemPage'
 
 export {
-  InventaryDetailPage,
+  InventaryDetailItemPage,
   InventaryPage,
-};
+  InventaryAddItemPage,
+}

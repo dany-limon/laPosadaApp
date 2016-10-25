@@ -5,7 +5,6 @@ import {StyleSheet, Text, View, ListView, Image, TouchableOpacity} from 'react-n
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import * as InventaryAction from '../../redux/actions/InventaryActions'
 
 class InventaryPage extends Component {
 
@@ -26,12 +25,9 @@ class InventaryPage extends Component {
             dataSource={dataSource}
             renderRow={(rowData, sectionID, rowID, highlightRow) => {
                 return(
-                  <TouchableOpacity style={{padding:20,flexDirection:'row', backgroundColor:'#EFEFEF', borderBottomWidth:1, borderBottomColor:'black'}}
-                      onPress={()=>{
-                        //Actions.inventaryDetail()
-                        this.props.addNewItem()
-                      }}>
-                    <View style={{width:80, height:80, backgroundColor:'red', alignSelf:'center'}}>
+                  <TouchableOpacity style={{padding:20,flexDirection:'row', borderBottomWidth:1, borderBottomColor:'black'}}
+                      onPress={()=>{Actions.inventaryDetailItem({item:rowData, itemId:rowID}) }}>
+                    <View style={{width:80, height:80, backgroundColor:'gray', alignSelf:'center'}}>
                       <Image
                         style={{width:80, height:80}}
                         resizeMode={'cover'}
@@ -67,7 +63,6 @@ const styles = StyleSheet.create({
 * REDUX
 */
 function mapStateToProps(state) {
-  console.log('mapStateToProps',state);
   return {
     fbDataBase:state.appDataState.fbDataBase,
   }
@@ -75,13 +70,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, props) {
   return {
-    addNewItem:()=>{
-      let item = {
-        nombre:'nombre',
-        descripcion:'descripcion'
-      }
-      dispatch(InventaryAction.addNewItem(item))
-    },
     dispatch:dispatch
   };
 }
