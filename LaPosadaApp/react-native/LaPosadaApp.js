@@ -17,11 +17,12 @@ import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 //*************************************************
 import { connect } from 'react-redux'
 import * as AppDataAction from './redux/actions/AppDataAction'
-import InventaryPage from './components/pages/InventaryPage'
+import {InventaryPage, InventaryDetailPage} from './components/pages/'
 
 const scenes = Actions.create(
   <Scene key="root" >
       <Scene key="inventary" initial={true} component={InventaryPage} title='Inventario'/>
+      <Scene key="inventaryDetail" component={InventaryDetailPage} title='Detalle'/>
   </Scene>
 )
 

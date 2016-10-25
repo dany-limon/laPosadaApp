@@ -1,16 +1,13 @@
 'use strict'
 
 import React, { Component, } from 'react'
-import {StyleSheet, Text, View, ListView, Image} from 'react-native'
+import {StyleSheet, Text, View, ListView, Image, TouchableOpacity} from 'react-native'
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
+import * as InventaryAction from '../../redux/actions/InventaryActions'
 
 class InventaryPage extends Component {
-
-  constructor(props) {
-      super(props)
-    }
 
     render() {
       if (!this.props.fbDataBase
@@ -29,7 +26,11 @@ class InventaryPage extends Component {
             dataSource={dataSource}
             renderRow={(rowData, sectionID, rowID, highlightRow) => {
                 return(
-                  <View style={{padding:20,flexDirection:'row', backgroundColor:'#EFEFEF', borderBottomWidth:1, borderBottomColor:'black'}}>
+                  <TouchableOpacity style={{padding:20,flexDirection:'row', backgroundColor:'#EFEFEF', borderBottomWidth:1, borderBottomColor:'black'}}
+                      onPress={()=>{
+                        //Actions.inventaryDetail()
+                        this.props.addNewItem()
+                      }}>
                     <View style={{width:80, height:80, backgroundColor:'red', alignSelf:'center'}}>
                       <Image
                         style={{width:80, height:80}}
@@ -37,13 +38,13 @@ class InventaryPage extends Component {
                         source={{uri: rowData.imagen}}/>
                     </View>
                     <View style={{flex:1, marginLeft:20, alignSelf:'center'}}>
-                      <Text>#{rowID}</Text>
+                      <Text>id: {rowID}</Text>
                       <Text>Nombre {rowData.nombre}</Text>
                       <Text>Descripción {rowData.descripcion}</Text>
                       <Text>Cantidad {rowData.cantidad}</Text>
                     </View>
 
-                  </View>
+                  </TouchableOpacity>
                 )
             }}
           />
@@ -74,6 +75,13 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, props) {
   return {
+    addNewItem:()=>{
+      let item = {
+        nombre:'nombre',
+        descripcion:'descripcion'
+      }
+      dispatch(InventaryAction.addNewItem(item))
+    },
     dispatch:dispatch
   };
 }
