@@ -4,6 +4,8 @@ const initialState = {
   fbDataBase:null,      //BBDD de Firebase
   fbDatabaseRef:null,    //Referencia a la BBDD de Firebase
   fbStorageRef:null,
+  fbStorageImageRef:null,
+  firebase:null
 };
 
 export default function appDataState(state = initialState, action = {}) {
@@ -16,8 +18,10 @@ export default function appDataState(state = initialState, action = {}) {
     case types.APP_FIREBASE_REFERENCE_UPDATE:
       return {
         ...state,
+        firebase: action.firebase,
         fbDatabaseRef: action.fbDatabaseRef,
-        fbStorageRef: action.fbDatabaseRef
+        fbStorageRef: action.fbStorageRef,
+        fbStorageImageRef: action.fbStorageImageRef
       }
     default:
       return state

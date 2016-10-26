@@ -24,7 +24,8 @@ export function initializeApp(){
 function initializeFirebase(dispatch, getState){
   let fbDatabaseRef = firebaseApp.database().ref()
   let fbStorageRef = firebase.storage().ref()
-  dispatch(updateFirebaseRef(fbDatabaseRef, fbStorageRef))
+  let fbStorageImageRef = firebase.storage().ref('rn-firebase-upload')
+  dispatch(updateFirebaseRef(firebase, fbDatabaseRef, fbStorageRef, fbStorageImageRef))
 
   fbDatabaseRef.on('value', (snap) => {
 
@@ -43,10 +44,13 @@ function initializeFirebase(dispatch, getState){
 }
 
 //Almacena en el store la referencia a Firebase
-function updateFirebaseRef(fbDatabaseRef){
+function updateFirebaseRef(firebase, fbDatabaseRef, fbStorageRef, fbStorageImageRef){
   return {
     type: types.APP_FIREBASE_REFERENCE_UPDATE,
-    fbDatabaseRef:fbDatabaseRef
+    firebase:firebase,
+    fbDatabaseRef:fbDatabaseRef,
+    fbStorageRef:fbStorageRef,
+    fbStorageImageRef:fbStorageImageRef
   }
 }
 
