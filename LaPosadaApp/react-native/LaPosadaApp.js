@@ -27,12 +27,7 @@ import {InventaryPage, InventaryDetailItemPage, InventaryAddItemPage} from './co
 import {NavBarIcon} from './components/widgets/'
 const scenes = Actions.create(
   <Scene key="root" >
-      <Scene key="inventary" initial={true} component={InventaryPage} title='Inventario'
-            renderRightButton={()=>{
-              return(
-                <NavBarIcon onPress={Actions.inventaryNewItem}/>
-              )
-            }}/>
+      <Scene key="inventary" initial={true} component={InventaryPage} title='Inventario' rightTitle='Nuevo' onRight={()=>{Actions.inventaryNewItem()}}/>
       <Scene key="inventaryDetailItem" component={InventaryDetailItemPage} title='Detalle'/>
       <Scene key="inventaryNewItem" component={InventaryAddItemPage} title='Nuevo elemento'/>
 

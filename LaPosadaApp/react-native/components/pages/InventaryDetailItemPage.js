@@ -1,11 +1,13 @@
 'use strict'
 
 import React, { Component, } from 'react'
-import {StyleSheet, Text, View, Alert, Image, TouchableOpacity} from 'react-native'
+import {StyleSheet, Text, View, Alert, Image, TouchableOpacity, Platform, ScrollView} from 'react-native'
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import * as InventaryAction from '../../redux/actions/InventaryActions'
 import {InputText} from '../widgets/'
+import ImagePicker from 'react-native-image-picker'
+import * as AppConfiguration from '../../commons/Configuration.js'
 
 class InventaryDetailItemPage extends Component {
   constructor(props) {
@@ -13,7 +15,10 @@ class InventaryDetailItemPage extends Component {
       this.state = {
         name: this.props.item.nombre,
         description: this.props.item.descripcion,
-        quantity:this.props.item.cantidad
+        quantity:this.props.item.cantidad,
+        image:this.props.item.imagen,
+        image64:null,
+        imageFile:null
       }
     }
 
@@ -21,51 +26,101 @@ class InventaryDetailItemPage extends Component {
     Alert.alert(  'Eliminar medicamento',
                   '¿Estás segura de querer borrar el medicamento?',
                   [{text:'Cancelar', style: 'cancel' },
-                  {text:'Borrar', onPress: this.props.deleteItem.bind(this, this.props.itemId), style: 'cancel'},]
+                  {text:'Borrar', onPress: this.props.deleteItem.bind(this, this.props.item), style: 'cancel'},]
                 )
   }
 
-    render(){
-      return (
-        <View style={styles.container}>
+  _handlePressNewPhoto() {
+      ImagePicker.showImagePicker(AppConfiguration.imageCaptureOptions, (response) => {
+        console.log('Response = ', response);
+        if (response.didCancel) { console.log('User cancelled photo picker'); }
+        else if (response.error) { console.log('ImagePicker Error: ', response.error); }
+        else if (response.customButton) { console.log('User tapped custom button: ', response.customButton); }
+        else {
+          const source64 = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
+          const uri = (Platform.OS === 'ios'?response.uri.replace('file://', ''):response.uri)
 
-            <View style={{height:10}}/>
+          this.setState({
+            image64:response.data,
+            imageFile:uri
+          })
+        }
+      })
+    }
 
-            <InputText
-              label={'Nombre'}
-              onChangeText={(name) => this.setState({name})}
-              value={this.state.name}/>
+  _renderImage(){
 
-            <View style={{height:10}}/>
+    var source = null
+    if (this.state.image64){
+      source = {uri: 'data:image/jpeg;base64,' + this.state.image64, isStatic: true};
+    }else if (this.state.image){
+      source = {uri: this.state.image};
+    }
 
-            <InputText
-              label={'Descripción'}
-              onChangeText={(description) => this.setState({description})}
-              value={this.state.description}/>
-
-            <View style={{height:10}}/>
-
-            <InputText
-              label={'Cantidad'}
-              keyboardType={'numeric'}
-              onChangeText={(quantity) => this.setState({quantity})}
-              value={this.state.quantity}/>
-
-            <View style={{height:30}}/>
-
-
-            <TouchableOpacity style={{alignSelf:'center', backgroundColor:'#DDDDDD', padding:15}}
-              onPress={this._handleDelete.bind(this)}>
-              <Text>Borrar</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{alignSelf:'center', backgroundColor:'#DDDDDD', padding:15}}
-              onPress={this.props.updateItem.bind(this, this.props.itemId)}>
-              <Text>Actualizar</Text>
-            </TouchableOpacity>
-        </View>
+    if (source){
+      return(
+        <Image style={{width:100, height:100, backgroundColor:'#DDDDDD', alignSelf:'center'}} source={source} />
+      )
+    }else{
+      return(
+        <Text style={{backgroundColor:'#DDDDDD', padding:20, width:120, alignSelf:'center'}}> + Imagen </Text>
       )
     }
+  }
+
+  render(){
+    return (
+      <ScrollView style={styles.container}>
+
+          <View style={{height:15}}/>
+
+          <InputText
+            label={'Nombre'}
+            onChangeText={(name) => this.setState({name})}
+            value={this.state.name}/>
+
+          <View style={{height:15}}/>
+
+          <InputText
+            label={'Descripción'}
+            onChangeText={(description) => this.setState({description})}
+            value={this.state.description}/>
+
+          <View style={{height:15}}/>
+
+          <InputText
+            label={'Cantidad'}
+            keyboardType={'numeric'}
+            onChangeText={(quantity) => this.setState({quantity})}
+            value={this.state.quantity}/>
+
+          <View style={{height:15}}/>
+
+          <TouchableOpacity onPress={this._handlePressNewPhoto.bind(this)} style={{margin:20}}>
+              {this._renderImage()}
+
+          </TouchableOpacity>
+
+          <View style={{height:30}}/>
+
+
+          <View style={{flexDirection:'row'}}>
+            <TouchableOpacity style={{flex:1, backgroundColor:'#DDDDDD', padding:15}}
+              onPress={this._handleDelete.bind(this)}>
+              <Text style={{alignSelf:'center', fontSize:20}}>Borrar</Text>
+            </TouchableOpacity>
+
+            <View style={{width:20}} />
+
+            <TouchableOpacity style={{flex:1, backgroundColor:'#DDDDDD', padding:15}}
+              onPress={this.props.updateItem.bind(this, this.props.item, this.state )}>
+              <Text style={{alignSelf:'center', fontSize:20}}>Actualizar</Text>
+            </TouchableOpacity>
+          </View>
+
+      </ScrollView>
+    )
+  }
 }
 
 //*************************************************
@@ -74,7 +129,8 @@ class InventaryDetailItemPage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 40
+    marginLeft:40,
+    marginRight:40
   },
 })
 
@@ -90,16 +146,13 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, props) {
   return {
-    deleteItem:(itemId)=>{
+    deleteItem:(item)=>{
       Actions.pop()
-      dispatch(InventaryAction.deleteItem(itemId))
+      dispatch(InventaryAction.deleteItem(item))
     },
-    updateItem:(itemId)=>{
-      let item = {
-        nombre:'XXX'
-      }
+    updateItem:(item, stateObj)=>{
       Actions.pop()
-      dispatch(InventaryAction.updateItem(itemId, item))
+      dispatch(InventaryAction.updateItem(item, stateObj))
     },
     dispatch:dispatch
   };

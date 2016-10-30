@@ -1,4 +1,6 @@
 import * as types from '../ActionTypes'
+import * as InventaryActions from './InventaryActions'
+import * as FirebaseUtils from '../../utils/FirebaseUtils'
 
 //*************************************************
 // Firebase
@@ -13,44 +15,11 @@ const firebaseConfig = {
 }
 const firebaseApp = firebase.initializeApp(firebaseConfig)
 
-//Inicializa la app
-export function initializeApp(){
-  return (dispatch, getState)=>{
-      initializeFirebase(dispatch, getState)
-  }
-}
-
-//Inicializa y configura Firebase
-function initializeFirebase(dispatch, getState){
-  let fbDatabaseRef = firebaseApp.database().ref()
-  let fbStorageRef = firebase.storage().ref()
-  let fbStorageImageRef = firebase.storage().ref('rn-firebase-upload')
-  dispatch(updateFirebaseRef(firebase, fbDatabaseRef, fbStorageRef, fbStorageImageRef))
-
-  fbDatabaseRef.on('value', (snap) => {
-
-    console.log('Datos Recibidos Firebase',snap);
-
-    //Formateamos en items la BBDD de Firebase
-    var items = {};
-    snap.forEach((child) => {
-      items[child.key] = child.val()
-    })
-    console.log('Formateados datos Firebase',items);
-
-    //Almacenamos los items en el store de Redux
-    dispatch(updateData(items))
-  })
-}
-
 //Almacena en el store la referencia a Firebase
-function updateFirebaseRef(firebase, fbDatabaseRef, fbStorageRef, fbStorageImageRef){
+function updateFirebaseRef(firebase){
   return {
     type: types.APP_FIREBASE_REFERENCE_UPDATE,
     firebase:firebase,
-    fbDatabaseRef:fbDatabaseRef,
-    fbStorageRef:fbStorageRef,
-    fbStorageImageRef:fbStorageImageRef
   }
 }
 
@@ -60,4 +29,18 @@ function updateData(fbDataBase) {
     type: types.APP_DATA_UPDATE,
     fbDataBase:fbDataBase
   }
+}
+
+//Inicializa la app
+export function initializeApp(){
+  return (dispatch, getState)=>{
+      initializeFirebase(dispatch)
+  }
+}
+
+//Inicializa y configura Firebase
+function initializeFirebase(dispatch){
+  dispatch(updateFirebaseRef(firebaseApp))
+
+  InventaryActions.initializeInventary(firebaseApp, dispatch)
 }

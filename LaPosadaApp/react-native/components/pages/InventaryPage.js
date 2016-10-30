@@ -9,14 +9,18 @@ import { connect } from 'react-redux'
 class InventaryPage extends Component {
 
     render() {
-      if (!this.props.fbDataBase
-        || !this.props.fbDataBase.inventario
-        || !this.props.fbDataBase.inventario.elementos){
-        return (<View/>)
+      if (!this.props.items){
+        return (
+          <View>
+            <Text>
+            Cargando datos ...
+            </Text>
+          </View>
+        )
       }
 
       var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-      let dataSource = ds.cloneWithRows(this.props.fbDataBase.inventario.elementos)
+      let dataSource = ds.cloneWithRows(this.props.items)
 
       return (
         <View style={styles.container}>
@@ -26,7 +30,7 @@ class InventaryPage extends Component {
             renderRow={(rowData, sectionID, rowID, highlightRow) => {
                 return(
                   <TouchableOpacity style={{padding:20,flexDirection:'row', borderBottomWidth:1, borderBottomColor:'black'}}
-                      onPress={()=>{Actions.inventaryDetailItem({item:rowData, itemId:rowID}) }}>
+                      onPress={()=>{Actions.inventaryDetailItem({item:rowData, title:rowData.nombre}) }}>
                     <View style={{width:80, height:80, backgroundColor:'gray', alignSelf:'center'}}>
                       <Image
                         style={{width:80, height:80}}
@@ -34,10 +38,7 @@ class InventaryPage extends Component {
                         source={{uri: rowData.imagen}}/>
                     </View>
                     <View style={{flex:1, marginLeft:20, alignSelf:'center'}}>
-                      <Text>id: {rowID}</Text>
-                      <Text>Nombre {rowData.nombre}</Text>
-                      <Text>Descripción {rowData.descripcion}</Text>
-                      <Text>Cantidad {rowData.cantidad}</Text>
+                      <Text style={{fontSize:22}}>{rowData.nombre}</Text>
                     </View>
 
                   </TouchableOpacity>
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
 */
 function mapStateToProps(state) {
   return {
-    fbDataBase:state.appDataState.fbDataBase,
+    items:state.inventaryState.items,
   }
 }
 

@@ -1,12 +1,13 @@
 'use strict'
 
 import React, { Component, } from 'react'
-import {StyleSheet, Platform, Text, View, Image, TouchableOpacity} from 'react-native'
+import {StyleSheet, Platform, Text, View, Image, TouchableOpacity, Alert, ScrollView} from 'react-native'
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-picker'
 import {InputText} from '../widgets/'
 import * as InventaryAction from '../../redux/actions/InventaryActions'
+import * as AppConfiguration from '../../commons/Configuration.js'
 
 class InventaryAddItemPage extends Component {
 
@@ -22,8 +23,6 @@ class InventaryAddItemPage extends Component {
     }
 
     _handlePressSave(){
-      //TODO - Controlar los parametros
-
       this.props.addNewItem(this.state.name,
         this.state.description,
         this.state.quantity,
@@ -31,68 +30,52 @@ class InventaryAddItemPage extends Component {
     }
 
 
-      _handlePressNewPhoto() {
-          const options = {
-            title:'',
-            takePhotoButtonTitle:'Cámara',
-            chooseFromLibraryButtonTitle:'Galería',
-            cancelButtonTitle:'Cancelar',
-            allowsEditing: false,
-            quality: 0.5,
-            maxWidth: 300,
-            maxHeight: 300,
-            storageOptions: {
-              skipBackup: true
-            }
-          };
+  _handlePressNewPhoto() {
+      ImagePicker.showImagePicker(AppConfiguration.imageCaptureOptions, (response) => {
+        console.log('Response = ', response);
+        if (response.didCancel) { console.log('User cancelled photo picker'); }
+        else if (response.error) { console.log('ImagePicker Error: ', response.error); }
+        else if (response.customButton) { console.log('User tapped custom button: ', response.customButton); }
+        else {
+          const source64 = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
+          const uri = (Platform.OS === 'ios'?response.uri.replace('file://', ''):response.uri)
 
-          ImagePicker.showImagePicker(options, (response) => {
-            console.log('Response = ', response);
-            if (response.didCancel) { console.log('User cancelled photo picker'); }
-            else if (response.error) { console.log('ImagePicker Error: ', response.error); }
-            else if (response.customButton) { console.log('User tapped custom button: ', response.customButton); }
-            else {
-              
-              const source64 = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
-              const uri = (Platform.OS === 'ios'?response.uri.replace('file://', ''):response.uri)
-
-              //almacenamos
-              this.setState({
-                image64:response.data,
-                imageFile:uri
-              })
-            }
-          });
+          this.setState({
+            image64:response.data,
+            imageFile:uri
+          })
         }
+      })
+    }
 
     _renderImage(){
       if (this.state.image64){
         var source = {uri: 'data:image/jpeg;base64,' + this.state.image64, isStatic: true};
         return(
-            <Image style={{width:100, height:100, backgroundColor:'green'}} source={source} />
+            <Image style={{width:100, height:100, backgroundColor:'green', alignSelf:'center'}} source={source} />
         )
       }
     }
 
     render() {
       return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
 
-          <View style={{height:10}}/>
+          <View style={{height:15}}/>
 
           <InputText
             label={'Nombre'}
             onChangeText={(name) => this.setState({name})}
             value={this.state.name}/>
 
-          <View style={{height:10}}/>
+          <View style={{height:15}}/>
 
           <InputText
             label={'Descripción'}
             onChangeText={(description) => this.setState({description})}
             value={this.state.description}/>
 
-          <View style={{height:10}}/>
+          <View style={{height:15}}/>
 
           <InputText
             label={'Cantidad'}
@@ -100,22 +83,21 @@ class InventaryAddItemPage extends Component {
             onChangeText={(quantity) => this.setState({quantity})}
             value={this.state.quantity}/>
 
-            {this._renderImage()}
-
-            <TouchableOpacity onPress={this._handlePressNewPhoto.bind(this)} style={{backgroundColor:'red'}}>
-                <Text> Imagen </Text>
+            <TouchableOpacity onPress={this._handlePressNewPhoto.bind(this)} style={{margin:20}}>
+                {this._renderImage()}
+                <Text style={{backgroundColor:'#DDDDDD', padding:20, width:120, alignSelf:'center'}}> + Imagen </Text>
             </TouchableOpacity>
 
 
           <View style={{height:30}}/>
 
-          <TouchableOpacity style={{alignSelf:'center', backgroundColor:'#DDDDDD', padding:15}}
+          <TouchableOpacity style={{ backgroundColor:'#DDDDDD', padding:20}}
             onPress={this._handlePressSave.bind(this)}>
-            <Text>Guardar</Text>
+            <Text style={{alignSelf:'center', fontSize:20}}>Guardar</Text>
           </TouchableOpacity>
 
 
-        </View>
+        </ScrollView>
       )
     }
 }
