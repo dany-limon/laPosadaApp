@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component, } from 'react'
-import {StyleSheet, Platform, Text, View, Image, TouchableOpacity, Alert, ScrollView} from 'react-native'
+import {StyleSheet, Platform, Text, View, Image, TouchableOpacity, Alert, ScrollView, Switch} from 'react-native'
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-picker'
@@ -18,15 +18,13 @@ class InventaryAddItemPage extends Component {
         description: '',
         quantity:'',
         image64:null,
-        imageFile:null
+        imageFile:null,
+        outside:false
       }
     }
 
     _handlePressSave(){
-      this.props.addNewItem(this.state.name,
-        this.state.description,
-        this.state.quantity,
-        this.state.imageFile)
+      this.props.addNewItem(this.state)
     }
 
 
@@ -54,12 +52,16 @@ class InventaryAddItemPage extends Component {
         return(
             <Image style={{width:100, height:100, backgroundColor:'green', alignSelf:'center'}} source={source} />
         )
+      }else{
+        return(
+          <Text style={{backgroundColor:'#DDDDDD', fontSize:20, padding:10, width:150, alignSelf:'center'}}> + Imagen</Text>
+        )
       }
     }
 
     render() {
       return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} showsVerticalScrollIndicator ={false}>
 
           <View style={{height:15}}/>
 
@@ -83,9 +85,17 @@ class InventaryAddItemPage extends Component {
             onChangeText={(quantity) => this.setState({quantity})}
             value={this.state.quantity}/>
 
+          <View style={{marginTop:20, flexDirection:'row', alignSelf:'center'}}>
+            <Text style={{fontSize:20}}>Exterior</Text>
+            <Switch
+              onValueChange={(value) => this.setState({outside: value})}
+              style={{marginLeft: 10}}
+              value={this.state.outside} />
+          </View>
+
+
             <TouchableOpacity onPress={this._handlePressNewPhoto.bind(this)} style={{margin:20}}>
                 {this._renderImage()}
-                <Text style={{backgroundColor:'#DDDDDD', padding:20, width:120, alignSelf:'center'}}> + Imagen </Text>
             </TouchableOpacity>
 
 
@@ -125,9 +135,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, props) {
   return {
-    addNewItem:(name, description, quantity, file)=>{
+    addNewItem:(stateObj)=>{
       Actions.pop()
-      dispatch(InventaryAction.addNewItem(name, description, quantity, file))
+      dispatch(InventaryAction.addNewItem(stateObj))
     },
     dispatch:dispatch
   };

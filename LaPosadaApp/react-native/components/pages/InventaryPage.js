@@ -4,50 +4,53 @@ import React, { Component, } from 'react'
 import {StyleSheet, Text, View, ListView, Image, TouchableOpacity} from 'react-native'
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
-
+import * as InventaryActions from '../../redux/actions/InventaryActions'
+import {InventaryCell} from '../cell/'
 
 class InventaryPage extends Component {
 
-    render() {
-      if (!this.props.items){
-        return (
-          <View>
-            <Text>
-            Cargando datos ...
-            </Text>
-          </View>
-        )
-      }
+  componentDidMount() {
+      this.props.initializeInventary()
+  }
 
-      var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-      let dataSource = ds.cloneWithRows(this.props.items)
+  _renderNoData(){
+    return (
+      <View style={{flex:1, justifyContent:'center'}}>
+        <Text style={{color:'gray', alignSelf:'center', fontSize:30}}>
+        Sin datos
+        </Text>
+      </View>
+    )
+  }
 
-      return (
-        <View style={styles.container}>
-          <ListView
-            style={{flex:1}}
-            dataSource={dataSource}
-            renderRow={(rowData, sectionID, rowID, highlightRow) => {
-                return(
-                  <TouchableOpacity style={{padding:20,flexDirection:'row', borderBottomWidth:1, borderBottomColor:'black'}}
-                      onPress={()=>{Actions.inventaryDetailItem({item:rowData, title:rowData.nombre}) }}>
-                    <View style={{width:80, height:80, backgroundColor:'gray', alignSelf:'center'}}>
-                      <Image
-                        style={{width:80, height:80}}
-                        resizeMode={'cover'}
-                        source={{uri: rowData.imagen}}/>
-                    </View>
-                    <View style={{flex:1, marginLeft:20, alignSelf:'center'}}>
-                      <Text style={{fontSize:22}}>{rowData.nombre}</Text>
-                    </View>
+  _renderList(){
+    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+    let dataSource = ds.cloneWithRows(this.props.items)
 
-                  </TouchableOpacity>
-                )
-            }}
-          />
-        </View>
-      )
+    return(
+      <ListView
+        style={{flex:1}}
+        enableEmptySections={true}
+        dataSource={dataSource}
+        renderRow={(rowData, sectionID, rowID, highlightRow) => {
+            return(
+              <InventaryCell
+                item={rowData}
+                onPress={()=>{Actions.inventaryDetailItem({item:rowData, title:rowData.nombre}) }}
+              />
+            )
+        }}
+      />
+    )
+  }
+
+  render() {
+    if (!this.props.items || this.props.items==0){
+      return(this._renderNoData())
+    }else{
+      return(this._renderList())
     }
+  }
 }
 
 /*
@@ -55,7 +58,7 @@ class InventaryPage extends Component {
 */
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+
   },
 })
 
@@ -71,6 +74,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, props) {
   return {
+    initializeInventary:()=>{
+      dispatch(InventaryActions.initialize())
+    },
     dispatch:dispatch
   };
 }

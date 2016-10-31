@@ -27,8 +27,8 @@ export default class InputText extends Component {
           label={this.props.label}
           borderColor={'black'}
           onChangeText={this.props.onChangeText}
-          inputStyle={{ color: 'black' }}
-          labelStyle={{color:'gray'}}
+          inputStyle={{ color: 'black', fontSize:18 }}
+          labelStyle={{color:'gray', fontSize:16}}
           value={this.props.value}
           keyboardType={this.props.keyboardType}
         />

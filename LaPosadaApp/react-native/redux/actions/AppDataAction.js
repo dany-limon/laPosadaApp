@@ -1,5 +1,4 @@
 import * as types from '../ActionTypes'
-import * as InventaryActions from './InventaryActions'
 import * as FirebaseUtils from '../../utils/FirebaseUtils'
 
 //*************************************************
@@ -41,6 +40,4 @@ export function initializeApp(){
 //Inicializa y configura Firebase
 function initializeFirebase(dispatch){
   dispatch(updateFirebaseRef(firebaseApp))
-
-  InventaryActions.initializeInventary(firebaseApp, dispatch)
 }

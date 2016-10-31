@@ -42,6 +42,8 @@ class LaPosadaApp extends Component {
     //Constructor del componente
     constructor(props) {
       super(props)
+
+      this.props.initializeApp()
     }
 
     componentWillMount() {
@@ -49,10 +51,6 @@ class LaPosadaApp extends Component {
       if(Platform.OS === 'android' && Platform.Version < 21){
         Navigator.NavigationBar.Styles.General.NavBarHeight = 40
       }
-    }
-
-    componentDidMount() {
-      this.props.initializeApp()
     }
 
     getNavBarOffset(){

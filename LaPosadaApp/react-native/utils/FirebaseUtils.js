@@ -10,13 +10,23 @@ import store from 'react-native-simple-store'
 // Convierte a array de objetos con clave
 //  @param snap objeto de BBDD de Firebase
 export function getArrayFromSnap(snap){
+
+  if (!snap){
+    return []
+  }
+
   let items = []
   let itemsObj = snap.val()
+  if (!itemsObj){
+    return []
+  }
+  
   Object.keys(itemsObj).map((key)=>{
     let item = itemsObj[key]
     item.key = key
     items.push(item)
   })
+
   return items
 }
 

@@ -20,29 +20,6 @@ function updateItems(items){
   }
 }
 
-
-/*
-* Inicializa para recibir los items del inventario de Firebase
-* @parama firebaseApp Referencia a Firebase
-* @parama dispatch dispatch de Redux
-*/
-export function initializeInventary(firebaseApp, dispatch){
-
-  //Recuperar datos cacheados
-  FirebaseUtils.getCacheObject(PATH)
-  .then((items)=>{
-    dispatch(updateItems(items))
-  })
-
-  //Obtener datos desde Firebase
-  firebaseApp.database().ref(ITEMS_PATH).on('value', (snap) => {
-    let items = FirebaseUtils.getArrayFromSnap(snap)
-    dispatch(updateItems(items))
-    FirebaseUtils.storeCacheObject(PATH, items)
-    console.log('Datos del inventario recibidos',items)
-  })
-}
-
 /*
 * Actualiza la fecha de actualizacion del inventario
 */
@@ -76,22 +53,23 @@ export function deleteItem(item){
 /*
 * Añade un nuevo elemento al inventario
 */
-export function addNewItem(name, description, quantity, file){
+export function addNewItem(stateObj){
   return (dispatch, getState)=>{
       const state = getState()
       let firebase = state.appDataState.firebase
 
       let item = {
-        nombre:name,
-        descripcion:description,
-        cantidad:quantity,
+        nombre:stateObj.name,
+        descripcion:stateObj.description,
+        cantidad:stateObj.quantity,
+        exterior:stateObj.outside,
       }
 
-      if (!file){
+      if (!stateObj.imageFile){
         FirebaseUtils.addNewObject(firebase, ITEMS_PATH, item)
         dispatch(updateLastUpdatedate())
       }else{
-        FirebaseUtils.uploadImageFileToFirebase(firebase, IMAGE_PATH, file)
+        FirebaseUtils.uploadImageFileToFirebase(firebase, IMAGE_PATH, stateObj.imageFile)
         .then((url)=>{
           item.imagen = url
           FirebaseUtils.addNewObject(firebase, ITEMS_PATH, item)
@@ -104,6 +82,33 @@ export function addNewItem(name, description, quantity, file){
       }
   }
 }
+
+
+/*
+* Inicializa para recibir los items del inventario de Firebase
+*/
+export function initialize(){
+
+  return (dispatch, getState)=>{
+      const state = getState()
+      let firebase = state.appDataState.firebase
+
+      //Recuperar datos cacheados
+      FirebaseUtils.getCacheObject(PATH)
+      .then((items)=>{
+        dispatch(updateItems(items))
+      })
+
+      //Obtener datos desde Firebase
+      firebase.database().ref(ITEMS_PATH).on('value', (snap) => {
+        let items = FirebaseUtils.getArrayFromSnap(snap)
+        dispatch(updateItems(items))
+        FirebaseUtils.storeCacheObject(PATH, items)
+        console.log('Datos del inventario recibidos',items)
+      })
+  }
+}
+
 
 /*
 * Actualiza el elemento del inventario
@@ -130,6 +135,12 @@ export function updateItem(item, objState){
       if (objState.image){
         object.imagen = objState.image
       }
+      if (objState.outside==true){
+        object.exterior = true
+      }else{
+        object.exterior = false
+      }
+
       dispatch(updateLastUpdatedate())
 
       if (!objState.imageFile){

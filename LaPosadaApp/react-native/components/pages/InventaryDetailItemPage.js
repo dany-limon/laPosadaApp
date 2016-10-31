@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component, } from 'react'
-import {StyleSheet, Text, View, Alert, Image, TouchableOpacity, Platform, ScrollView} from 'react-native'
+import {StyleSheet, Text, View, Alert, Image, TouchableOpacity, Platform, ScrollView, Switch} from 'react-native'
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import * as InventaryAction from '../../redux/actions/InventaryActions'
@@ -17,14 +17,15 @@ class InventaryDetailItemPage extends Component {
         description: this.props.item.descripcion,
         quantity:this.props.item.cantidad,
         image:this.props.item.imagen,
+        outside:this.props.item.exterior,
         image64:null,
         imageFile:null
       }
     }
 
   _handleDelete(){
-    Alert.alert(  'Eliminar medicamento',
-                  '¿Estás segura de querer borrar el medicamento?',
+    Alert.alert(  'Eliminar ' + this.state.name,
+                  '¿Estás seguro de querer borrarlo?',
                   [{text:'Cancelar', style: 'cancel' },
                   {text:'Borrar', onPress: this.props.deleteItem.bind(this, this.props.item), style: 'cancel'},]
                 )
@@ -95,6 +96,14 @@ class InventaryDetailItemPage extends Component {
             value={this.state.quantity}/>
 
           <View style={{height:15}}/>
+
+          <View style={{marginTop:20, flexDirection:'row', alignSelf:'center'}}>
+            <Text style={{fontSize:20}}>Exterior</Text>
+            <Switch
+              onValueChange={(value) => this.setState({outside: value})}
+              style={{marginLeft: 10}}
+              value={this.state.outside} />
+          </View>
 
           <TouchableOpacity onPress={this._handlePressNewPhoto.bind(this)} style={{margin:20}}>
               {this._renderImage()}
