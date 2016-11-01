@@ -23,14 +23,13 @@ import * as AppDataAction from './redux/actions/AppDataAction'
 //*************************************************
 // Pantallas
 //*************************************************
-import {InventaryPage, InventaryDetailItemPage, InventaryAddItemPage} from './components/pages/'
-import {NavBarIcon} from './components/widgets/'
+import {InventaryPage, InventaryDetailItemPage, InventaryEditItemPage, InventaryAddItemPage} from './components/pages/'
 const scenes = Actions.create(
   <Scene key="root" >
       <Scene key="inventary" initial={true} component={InventaryPage} title='Inventario' rightTitle='Nuevo' onRight={()=>{Actions.inventaryNewItem()}}/>
       <Scene key="inventaryDetailItem" component={InventaryDetailItemPage} title='Detalle'/>
+      <Scene key="inventaryEditItem" component={InventaryEditItemPage} title='Editar'/>
       <Scene key="inventaryNewItem" component={InventaryAddItemPage} title='Nuevo elemento'/>
-
   </Scene>
 )
 
@@ -75,6 +74,9 @@ class LaPosadaApp extends Component {
             ref={(c) => this._router = c}
             scenes={scenes}
             sceneStyle={{paddingTop: this.getNavBarOffset()}}
+            navigationBarStyle={{backgroundColor:'#5f021f'}}
+            titleStyle={{color:'white'}}
+            rightButtonTextStyle={{color:'white'}}
            />
       )
     }

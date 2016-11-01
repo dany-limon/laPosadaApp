@@ -1,32 +1,27 @@
 'use strict'
 
 import React, { Component, } from 'react'
-import {StyleSheet, Platform, Text, View, Image, TouchableOpacity, Alert, ScrollView, Switch} from 'react-native'
+import {StyleSheet, Text, View, Alert, Image, TouchableOpacity, Platform, ScrollView, Switch} from 'react-native'
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-picker'
-import {InputText} from '../widgets/'
-import * as InventaryAction from '../../redux/actions/InventaryActions'
-import * as AppConfiguration from '../../commons/Configuration.js'
+import * as InventaryAction from '../../../redux/actions/InventaryActions'
+import {InputText} from '../../widgets/'
+import * as AppConfiguration from '../../../commons/Configuration'
 
-class InventaryAddItemPage extends Component {
-
+class InventaryEditItemPage extends Component {
   constructor(props) {
       super(props);
       this.state = {
-        name: '',
-        description: '',
-        quantity:'',
+        name: this.props.item.nombre,
+        description: this.props.item.descripcion,
+        quantity:this.props.item.cantidad,
+        image:this.props.item.imagen,
+        outside:this.props.item.exterior,
         image64:null,
-        imageFile:null,
-        outside:false
+        imageFile:null
       }
     }
-
-    _handlePressSave(){
-      this.props.addNewItem(this.state)
-    }
-
 
   _handlePressNewPhoto() {
       ImagePicker.showImagePicker(AppConfiguration.imageCaptureOptions, (response) => {
@@ -46,24 +41,42 @@ class InventaryAddItemPage extends Component {
       })
     }
 
-    _renderImage(){
-      if (this.state.image64){
-        var source = {uri: 'data:image/jpeg;base64,' + this.state.image64, isStatic: true};
-        return(
-            <Image style={{width:100, height:100, backgroundColor:'green', alignSelf:'center'}} source={source} />
-        )
-      }else{
-        return(
-          <Text style={{backgroundColor:'#DDDDDD', fontSize:20, padding:10, width:150, alignSelf:'center'}}> + Imagen</Text>
-        )
-      }
+  _renderImage(){
+
+    var source = null
+    if (this.state.image64){
+      source = {uri: 'data:image/jpeg;base64,' + this.state.image64, isStatic: true};
+    }else if (this.state.image){
+      source = {uri: this.state.image};
     }
 
-    render() {
-      return (
-        <ScrollView style={styles.container} showsVerticalScrollIndicator ={false}>
+    if (source){
+      return(
+        <View style={{width:150, height:150}}>
+          <Image style={{width:150, height:150, backgroundColor:'#DDDDDD'}} source={source} />
+          <View style={{position :'absolute', bottom:0, left:0, right:0}}>
+            <Text style={{backgroundColor:'#DDDDDD', textAlign:'center', padding:5}}> Nueva imagen </Text>
+          </View>
+        </View>
+      )
+    }else{
+      return(
+        <Text style={{backgroundColor:'#DDDDDD', fontSize:20, padding:10, width:150, alignSelf:'center'}}> + Imagen</Text>
+      )
+    }
+  }
 
-          <View style={{height:15}}/>
+  render(){
+    return (
+      <ScrollView style={styles.container}>
+
+          <View style={{marginTop:20, alignSelf:'center'}}>
+            <TouchableOpacity onPress={this._handlePressNewPhoto.bind(this)} style={{}}>
+                {this._renderImage()}
+            </TouchableOpacity>
+          </View>
+
+          <View style={{height:20}}/>
 
           <InputText
             label={'Nombre'}
@@ -79,11 +92,14 @@ class InventaryAddItemPage extends Component {
 
           <View style={{height:15}}/>
 
+
           <InputText
             label={'Cantidad'}
             keyboardType={'numeric'}
             onChangeText={(quantity) => this.setState({quantity})}
             value={this.state.quantity}/>
+
+          <View style={{height:15}}/>
 
           <View style={{marginTop:20, flexDirection:'row', alignSelf:'center'}}>
             <Text style={{fontSize:20}}>Exterior</Text>
@@ -94,22 +110,20 @@ class InventaryAddItemPage extends Component {
           </View>
 
 
-            <TouchableOpacity onPress={this._handlePressNewPhoto.bind(this)} style={{margin:20}}>
-                {this._renderImage()}
-            </TouchableOpacity>
-
 
           <View style={{height:30}}/>
 
-          <TouchableOpacity style={{ backgroundColor:'#DDDDDD', padding:20}}
-            onPress={this._handlePressSave.bind(this)}>
-            <Text style={{alignSelf:'center', fontSize:20}}>Guardar</Text>
-          </TouchableOpacity>
 
+          <View style={{flexDirection:'row'}}>
+            <TouchableOpacity style={{flex:1, backgroundColor:'#DDDDDD', padding:15}}
+              onPress={this.props.updateItem.bind(this, this.props.item, this.state )}>
+              <Text style={{alignSelf:'center', fontSize:20}}>Actualizar</Text>
+            </TouchableOpacity>
+          </View>
 
-        </ScrollView>
-      )
-    }
+      </ScrollView>
+    )
+  }
 }
 
 //*************************************************
@@ -118,8 +132,8 @@ class InventaryAddItemPage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginLeft:40,
-    marginRight:40
+    marginLeft:20,
+    marginRight:20
   },
 })
 
@@ -135,9 +149,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, props) {
   return {
-    addNewItem:(stateObj)=>{
+    updateItem:(item, stateObj)=>{
       Actions.pop()
-      dispatch(InventaryAction.addNewItem(stateObj))
+      dispatch(InventaryAction.updateItem(item, stateObj))
     },
     dispatch:dispatch
   };
@@ -147,7 +161,6 @@ let mergeProps = (stateProps, dispatchProps, ownProps) => {
   const {dispatch} = dispatchProps;
 
   let actions = {
-
   };
 
   return {
@@ -158,4 +171,4 @@ let mergeProps = (stateProps, dispatchProps, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps,mergeProps)(InventaryAddItemPage);
+export default connect(mapStateToProps,mapDispatchToProps,mergeProps)(InventaryEditItemPage);

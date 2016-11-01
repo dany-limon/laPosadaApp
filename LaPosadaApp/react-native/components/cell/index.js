@@ -1,5 +1,5 @@
-import InventaryCell from './InventaryCell'
+import CellInfo from './CellInfo'
 
 export {
-  InventaryCell,
+  CellInfo,
 }
