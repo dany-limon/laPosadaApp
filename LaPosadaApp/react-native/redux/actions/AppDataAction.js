@@ -1,5 +1,7 @@
 import * as types from '../ActionTypes'
 import * as FirebaseUtils from '../../utils/FirebaseUtils'
+import {Actions} from 'react-native-router-flux'
+
 
 //*************************************************
 // Firebase
@@ -34,10 +36,48 @@ function updateData(fbDataBase) {
 export function initializeApp(){
   return (dispatch, getState)=>{
       initializeFirebase(dispatch)
+    }
+}
+
+//Login en firebase
+export function login(email, password){
+  return (dispatch, getState)=>{
+      const state = getState()
+      let firebase = state.appDataState.firebase
+      FirebaseUtils.login(firebase, email, password)
+    }
+}
+
+//Cierra la sesion actual
+export function closeSesion(){
+  return (dispatch, getState)=>{
+      const state = getState()
+      let firebase = state.appDataState.firebase
+      FirebaseUtils.closeSesion(firebase)
+  }
+}
+
+//Enviar email de recuperar contraseña
+export function resendToEmailPassword(email){
+  return (dispatch, getState)=>{
+      const state = getState()
+      let firebase = state.appDataState.firebase
+      FirebaseUtils.ressetPassword(firebase, email)
   }
 }
 
 //Inicializa y configura Firebase
 function initializeFirebase(dispatch){
   dispatch(updateFirebaseRef(firebaseApp))
+
+  // dispatch(closeSesion())
+
+  //detectamos el estado del usuario
+  firebaseApp.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      Actions.inventary()
+    } else {
+      Actions.login()
+    }
+  })
 }

@@ -1,11 +1,15 @@
 import InventaryDetailItemPage from './inventary/InventaryDetailItemPage'
 import InventaryPage from './inventary/InventaryPage'
-import InventaryAddItemPage from './inventary/InventaryAddItemPage'
 import InventaryEditItemPage from './inventary/InventaryEditItemPage'
+import LoginPage from './login/LoginPage'
+import RestorePaswordPage from './login/RestorePaswordPage'
+import SplashPage from './SplashPage'
 
 export {
   InventaryDetailItemPage,
   InventaryPage,
-  InventaryAddItemPage,
-  InventaryEditItemPage
+  InventaryEditItemPage,
+  LoginPage,
+  RestorePaswordPage,
+  SplashPage
 }

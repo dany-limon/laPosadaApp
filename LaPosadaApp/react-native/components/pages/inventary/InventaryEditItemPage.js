@@ -1,23 +1,27 @@
 'use strict'
 
 import React, { Component, } from 'react'
-import {StyleSheet, Text, View, Alert, Image, TouchableOpacity, Platform, ScrollView, Switch} from 'react-native'
+import {Dimensions, StyleSheet, Text, View, Alert, Image, TouchableOpacity, Platform, ScrollView, Switch} from 'react-native'
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-picker'
 import * as InventaryAction from '../../../redux/actions/InventaryActions'
 import {InputText} from '../../widgets/'
 import * as AppConfiguration from '../../../commons/Configuration'
+import * as AppFonts from '../../../commons/Fonts'
+
+const IPHONE6_WIDTH = 375;
+const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
 
 class InventaryEditItemPage extends Component {
   constructor(props) {
       super(props);
       this.state = {
-        name: this.props.item.nombre,
-        description: this.props.item.descripcion,
-        quantity:this.props.item.cantidad,
-        image:this.props.item.imagen,
-        outside:this.props.item.exterior,
+        name: (this.props.item?this.props.item.nombre:null),
+        description:  (this.props.item?this.props.item.descripcion:null),
+        quantity: (this.props.item?this.props.item.cantidad:null),
+        image: (this.props.item?this.props.item.imagen:null),
+        outside: (this.props.item?this.props.item.exterior:null),
         image64:null,
         imageFile:null
       }
@@ -52,72 +56,78 @@ class InventaryEditItemPage extends Component {
 
     if (source){
       return(
-        <View style={{width:150, height:150}}>
-          <Image style={{width:150, height:150, backgroundColor:'#DDDDDD'}} source={source} />
-          <View style={{position :'absolute', bottom:0, left:0, right:0}}>
-            <Text style={{backgroundColor:'#DDDDDD', textAlign:'center', padding:5}}> Nueva imagen </Text>
-          </View>
+        <View style={{width:200*initialScale, height:200*initialScale}}>
+          <Image style={{width:200*initialScale, height:200*initialScale, borderRadius:100*initialScale}} source={source} />
         </View>
       )
     }else{
       return(
-        <Text style={{backgroundColor:'#DDDDDD', fontSize:20, padding:10, width:150, alignSelf:'center'}}> + Imagen</Text>
+        <View style={{width:200*initialScale, height:200*initialScale}}>
+          <View style={{width:200*initialScale, height:200*initialScale, borderRadius:100*initialScale, backgroundColor:'#DDDDDD'}} />
+          <View style={{position :'absolute', bottom:0, left:0, right:0, top:0, justifyContent:'center'}}>
+            <Text style={{fontFamily:AppFonts.regular, textAlign:'center', padding:5*initialScale, alignSelf:'center', backgroundColor:'transparent'}}> Nueva imagen </Text>
+          </View>
+        </View>
       )
     }
   }
 
+  _renderImageSection(){
+    return(
+      <View style={{marginTop:30*initialScale, alignSelf:'center'}}>
+        <TouchableOpacity onPress={this._handlePressNewPhoto.bind(this)} style={{}}>
+            {this._renderImage()}
+        </TouchableOpacity>
+      </View>
+    )
+  }
   render(){
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator ={false}>
 
-          <View style={{marginTop:20, alignSelf:'center'}}>
-            <TouchableOpacity onPress={this._handlePressNewPhoto.bind(this)} style={{}}>
-                {this._renderImage()}
-            </TouchableOpacity>
-          </View>
+          {this._renderImageSection()}
 
-          <View style={{height:20}}/>
-
+          <View style={{height:40*initialScale}}/>
           <InputText
             label={'Nombre'}
             onChangeText={(name) => this.setState({name})}
             value={this.state.name}/>
 
-          <View style={{height:15}}/>
-
+          <View style={{height:20*initialScale}}/>
           <InputText
             label={'Descripción'}
             onChangeText={(description) => this.setState({description})}
             value={this.state.description}/>
 
-          <View style={{height:15}}/>
-
-
+          <View style={{height:20*initialScale}}/>
           <InputText
             label={'Cantidad'}
             keyboardType={'numeric'}
             onChangeText={(quantity) => this.setState({quantity})}
             value={this.state.quantity}/>
 
-          <View style={{height:15}}/>
-
-          <View style={{marginTop:20, flexDirection:'row', alignSelf:'center'}}>
-            <Text style={{fontSize:20}}>Exterior</Text>
+          <View style={{marginTop:40*initialScale, flexDirection:'row', alignSelf:'center'}}>
+            <Text style={{fontSize:20*initialScale, flex:1 , fontFamily:AppFonts.regular, color:'black'}}>Se puede sacar de la peña</Text>
             <Switch
               onValueChange={(value) => this.setState({outside: value})}
-              style={{marginLeft: 10}}
+              style={{marginLeft: 10*initialScale, alignSelf:'center'}}
               value={this.state.outside} />
           </View>
 
+          <View style={{height:40*initialScale}}/>
 
-
-          <View style={{height:30}}/>
-
-
-          <View style={{flexDirection:'row'}}>
-            <TouchableOpacity style={{flex:1, backgroundColor:'#DDDDDD', padding:15}}
-              onPress={this.props.updateItem.bind(this, this.props.item, this.state )}>
-              <Text style={{alignSelf:'center', fontSize:20}}>Actualizar</Text>
+          <View style={{flexDirection:'row', marginBottom:60*initialScale}}>
+            <TouchableOpacity style={{flex:1, backgroundColor:'#722f37', padding:15*initialScale, borderRadius:15*initialScale}}
+              onPress={()=>{
+                if(this.props.item){
+                  this.props.updateItem(this.props.item, this.state )
+                }else{
+                  this.props.addNewItem(this.state )
+                }
+              }}>
+              <Text style={{alignSelf:'center', fontSize:20*initialScale, color:'white', fontFamily:AppFonts.medium}}>
+                {(this.props.item?'Actualizar':'Guardar')}
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -132,8 +142,8 @@ class InventaryEditItemPage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginLeft:20,
-    marginRight:20
+    marginLeft:40*initialScale,
+    marginRight:40*initialScale
   },
 })
 
@@ -152,6 +162,10 @@ function mapDispatchToProps(dispatch, props) {
     updateItem:(item, stateObj)=>{
       Actions.pop()
       dispatch(InventaryAction.updateItem(item, stateObj))
+    },
+    addNewItem:(stateObj)=>{
+      Actions.pop()
+      dispatch(InventaryAction.addNewItem(stateObj))
     },
     dispatch:dispatch
   };

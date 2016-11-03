@@ -4,8 +4,8 @@
 // React
 //*************************************************
 import React, { Component, } from 'react'
-import {StyleSheet, Text, View, Navigator, Platform, TouchableOpacity} from 'react-native'
-
+import {StyleSheet, Dimensions, Text, View, Navigator, Platform, TouchableOpacity} from 'react-native'
+import * as AppFonts from './commons/Fonts'
 
 //*************************************************
 // Router-flux
@@ -23,15 +23,20 @@ import * as AppDataAction from './redux/actions/AppDataAction'
 //*************************************************
 // Pantallas
 //*************************************************
-import {InventaryPage, InventaryDetailItemPage, InventaryEditItemPage, InventaryAddItemPage} from './components/pages/'
+import {SplashPage, LoginPage, RestorePaswordPage, InventaryPage, InventaryDetailItemPage, InventaryEditItemPage} from './components/pages/'
 const scenes = Actions.create(
   <Scene key="root" >
-      <Scene key="inventary" initial={true} component={InventaryPage} title='Inventario' rightTitle='Nuevo' onRight={()=>{Actions.inventaryNewItem()}}/>
+      <Scene key="splash"  component={SplashPage} hideNavBar={true} type='reset' hideBackImage={true} panHandlers={null} />
+      <Scene key="login" component={LoginPage} title='Acceso' hideNavBar={false} type='reset' hideBackImage={true} panHandlers={null} />
+      <Scene key="restorePassword" component={RestorePaswordPage} title='Restablecer'/>
+      <Scene key="inventary" initial={true} component={InventaryPage} title='Inventario' hideNavBar={false} type='reset' hideBackImage={true} panHandlers={null} />
       <Scene key="inventaryDetailItem" component={InventaryDetailItemPage} title='Detalle'/>
       <Scene key="inventaryEditItem" component={InventaryEditItemPage} title='Editar'/>
-      <Scene key="inventaryNewItem" component={InventaryAddItemPage} title='Nuevo elemento'/>
   </Scene>
 )
+
+const IPHONE6_WIDTH = 375;
+const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
 
 //*************************************************
 // Componente
@@ -74,9 +79,12 @@ class LaPosadaApp extends Component {
             ref={(c) => this._router = c}
             scenes={scenes}
             sceneStyle={{paddingTop: this.getNavBarOffset()}}
-            navigationBarStyle={{backgroundColor:'#5f021f'}}
-            titleStyle={{color:'white'}}
-            rightButtonTextStyle={{color:'white'}}
+            navigationBarStyle={{backgroundColor:'#722f37'}}
+            titleStyle={{color:'white', fontFamily:AppFonts.medium, fontSize:20*initialScale, backgroundColor:'transparent'}}
+            rightButtonTextStyle={{color:'white', fontFamily:AppFonts.light, fontSize:18*initialScale, backgroundColor:'transparent'}}
+            hideBackImage={true}
+            backTitle={'Atrás'}
+            backButtonTextStyle={{color:'white', fontFamily:AppFonts.light, fontSize:18*initialScale, backgroundColor:'transparent'}}
            />
       )
     }

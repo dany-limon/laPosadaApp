@@ -1,11 +1,18 @@
 'use strict'
 
 import React, { Component, } from 'react'
-import {StyleSheet, Text, View, ListView, Image, TouchableOpacity, Alert} from 'react-native'
+import {StyleSheet, Dimensions, Text, View, ListView, Image, TouchableOpacity, Alert} from 'react-native'
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import * as InventaryActions from '../../../redux/actions/InventaryActions'
+import * as AppDataActions from '../../../redux/actions/AppDataAction'
 import {CellInfo} from '../../cell/'
+import ActionButton from 'react-native-action-button'
+import Icon from 'react-native-vector-icons/Ionicons'
+import * as AppColors from '../../../commons/Colors'
+
+const IPHONE6_WIDTH = 375;
+const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
 
 class InventaryPage extends Component {
 
@@ -37,7 +44,7 @@ class InventaryPage extends Component {
 
     return(
       <ListView
-        style={{flex:1, backgroundColor:'#dfdfdf'}}
+        style={{flex:1, backgroundColor:'#ececec'}}
         enableEmptySections={true}
         dataSource={dataSource}
         renderRow={(rowData, sectionID, rowID, highlightRow) => {
@@ -64,12 +71,34 @@ class InventaryPage extends Component {
     )
   }
 
+  _renderActionButton(){
+    return(
+      <ActionButton buttonColor={AppColors.main} bgColor={'#00000044'} btnOutRange={'gray'} hideShadow={true}>
+            <ActionButton.Item buttonColor={AppColors.main} title='Nuevo elemento'
+             onPress={()=>{Actions.inventaryEditItem({title:'Nuevo elemento'})}}>
+                <Icon name="md-create" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item buttonColor={AppColors.main} title='Cerrar sesion'
+             onPress={this.props.closeSesion}>
+                <Icon name="md-sync" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+      </ActionButton>
+    )
+  }
   render() {
+    let component = null
     if (!this.props.items || this.props.items==0){
-      return(this._renderNoData())
+      component = this._renderNoData()
     }else{
-      return(this._renderList())
+      component = this._renderList()
     }
+
+    return(
+      <View style={{flex:1}}>
+        {component}
+        {this._renderActionButton()}
+      </View>
+    )
   }
 }
 
@@ -80,6 +109,10 @@ const styles = StyleSheet.create({
   container: {
 
   },
+  actionButtonIcon: {
+    fontSize: 22*initialScale,
+    color: 'white',
+  }
 })
 
 
@@ -99,6 +132,9 @@ function mapDispatchToProps(dispatch, props) {
     },
     deleteItem:(item)=>{
       dispatch(InventaryActions.deleteItem(item))
+    },
+    closeSesion:()=>{
+      dispatch(AppDataActions.closeSesion())
     },
     dispatch:dispatch
   };

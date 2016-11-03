@@ -90,6 +90,7 @@ export function addNewItem(stateObj){
 export function initialize(){
 
   return (dispatch, getState)=>{
+
       const state = getState()
       let firebase = state.appDataState.firebase
 
@@ -104,7 +105,6 @@ export function initialize(){
         let items = FirebaseUtils.getArrayFromSnap(snap)
         dispatch(updateItems(items))
         FirebaseUtils.storeCacheObject(PATH, items)
-        console.log('Datos del inventario recibidos',items)
       })
   }
 }

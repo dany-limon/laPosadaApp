@@ -1,14 +1,17 @@
 'use strict'
 
 import React, { Component, } from 'react'
-import {StyleSheet, Text, View, Alert, Image, TouchableOpacity, Platform, ScrollView, Switch} from 'react-native'
+import {StyleSheet, Platform, Dimensions, Text, View, Alert, Image, TouchableOpacity,  ScrollView, Switch} from 'react-native'
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-picker'
 import * as InventaryAction from '../../../redux/actions/InventaryActions'
 import {InputText} from '../../widgets/'
 import Lightbox from 'react-native-lightbox'
+import * as AppFonts from '../../../commons/Fonts'
 
+const IPHONE6_WIDTH = 375;
+const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
 
 class InventaryDetailItemPage extends Component {
   constructor(props) {
@@ -35,10 +38,10 @@ class InventaryDetailItemPage extends Component {
   _renderImage(){
     if (this.props.item.imagen){
       return(
-        <View style={{ height:200, width:200, marginTop:30,  alignSelf:'center'}}>
+        <View style={styles.imageContainer}>
           <Lightbox underlayColor='transparent' activeProps={{flex:1, borderRadius:0, borderWidth:0}} navigator={this.props.navigator} >
             <Image
-              style={{ height:200, borderRadius:100,}}
+              style={styles.image}
               resizeMode="cover"
               source={{ uri: this.props.item.imagen }} />
           </Lightbox>
@@ -50,7 +53,7 @@ class InventaryDetailItemPage extends Component {
   _renderQuantity(){
     if (this.state.quantity){
       return(
-        <Text style={{flex:1, fontSize:16, alignSelf:'center', marginTop:15, textAlign:'left', color:'black'}}>
+        <Text style={styles.quantity}>
           {this.state.quantity} uni.
         </Text>
       )
@@ -62,25 +65,25 @@ class InventaryDetailItemPage extends Component {
 
           {this._renderImage()}
 
-          <Text style={{fontSize:25, alignSelf:'center', marginTop:40, textAlign:'center', color:'black', fontWeight:'bold'}}>
-            {this.state.name.toUpperCase()}
-          </Text>
-
-          <Text style={{fontSize:16, alignSelf:'center', marginTop:10, textAlign:'center', color:'#000000AA'}}>
-            {this.state.description}
-          </Text>
-
-          <View style={{flex:1, height:1, backgroundColor:'black', marginTop:30}} />
-
-          <View style={{flexDirection:'row'}}>
-            {this._renderQuantity()}
-
-            <Text style={{flex:1, fontSize:16, alignSelf:'center', marginTop:15, textAlign:'right', color:'black'}}>
-              {(this.state.outside?'Se':'No se')} puede sacar
+          <View style={styles.infoContainer}>
+            <Text style={styles.name}>
+              {(this.state.name?this.state.name.toUpperCase():'')}
             </Text>
+
+            <Text style={styles.description}>
+              {this.state.description}
+            </Text>
+
+            <View style={styles.separator} />
+
+            <View style={{flexDirection:'row'}}>
+              {this._renderQuantity()}
+
+              <Text style={styles.outside}>
+                {(this.state.outside?'Se':'No se')} puede sacar
+              </Text>
+            </View>
           </View>
-
-
       </ScrollView>
     )
   }
@@ -92,10 +95,65 @@ class InventaryDetailItemPage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingLeft:40,
-    paddingRight:40,
-    backgroundColor:'#F0F0F0'
+    paddingLeft:40*initialScale,
+    paddingRight:40*initialScale,
+    backgroundColor:'white'
   },
+  infoContainer:{
+     marginTop:40*initialScale,
+     marginBottom:40*initialScale
+  },
+  imageContainer:{
+    height:200*initialScale,
+    width:200*initialScale,
+    marginTop:30*initialScale,
+    alignSelf:'center'
+  },
+  image:{
+    height:200*initialScale,
+    borderRadius:100*initialScale
+  },
+  imageFull:{
+
+  },
+  quantity:{
+    fontFamily:AppFonts.light,
+    fontSize:20*initialScale,
+    alignSelf:'center',
+    marginTop:15*initialScale,
+    textAlign:'left',
+    color:'black'
+  },
+  outside:{
+    flex:1,
+    fontFamily:AppFonts.light,
+    fontSize:20*initialScale,
+    alignSelf:'center',
+    marginTop:15*initialScale,
+    textAlign:'right',
+    color:'black'
+  },
+  separator:{
+    flex:1,
+    height:1,
+    backgroundColor:'#DFDFDF',
+    marginTop:40*initialScale
+  },
+  description:{
+    fontFamily:AppFonts.regular,
+    fontSize:18*initialScale,
+    alignSelf:'center',
+    marginTop:10*initialScale,
+    textAlign:'center',
+    color:'#000000AA'
+  },
+  name:{
+    fontFamily:AppFonts.bold,
+    fontSize:25*initialScale,
+    alignSelf:'center',
+    textAlign:'center',
+    color:'black'
+  }
 })
 
 

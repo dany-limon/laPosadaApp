@@ -1,10 +1,15 @@
 'use strict'
 
 import React, { Component, } from 'react'
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native'
+import {StyleSheet, Dimensions, Text, View, TouchableOpacity} from 'react-native'
 
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { Hoshi} from 'react-native-textinput-effects'
+import * as AppFonts from '../../commons/Fonts'
+import * as AppColors from '../../commons/Colors'
+
+const IPHONE6_WIDTH = 375;
+const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
 
 export default class InputText extends Component {
 
@@ -21,17 +26,33 @@ export default class InputText extends Component {
     keyboardType: 'default'
   }
 
-    render() {
-      return (
-        <Hoshi
-          label={this.props.label}
-          borderColor={'black'}
-          onChangeText={this.props.onChangeText}
-          inputStyle={{ color: 'black', fontSize:18 }}
-          labelStyle={{color:'gray', fontSize:16}}
-          value={this.props.value}
-          keyboardType={this.props.keyboardType}
-        />
-      )
-    }
+  render() {
+    return (
+      <Hoshi
+        label={this.props.label}
+        borderColor={AppColors.main}
+        onChangeText={this.props.onChangeText}
+        inputStyle={styles.inputStyle}
+        labelStyle={styles.labelStyle}
+        value={this.props.value}
+        keyboardType={this.props.keyboardType}
+      />
+    )
+  }
 }
+
+//*************************************************
+// Estilos
+//*************************************************
+const styles = StyleSheet.create({
+  inputStyle: {
+    color: AppColors.black,
+    fontSize:20*initialScale,
+    fontFamily:AppFonts.regular
+  },
+  labelStyle:{
+    color:AppColors.gray,
+    fontSize:16*initialScale,
+    fontFamily:AppFonts.light
+  }
+})
