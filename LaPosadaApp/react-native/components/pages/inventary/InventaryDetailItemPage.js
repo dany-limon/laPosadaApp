@@ -25,8 +25,6 @@ class InventaryDetailItemPage extends Component {
         quantity:this.props.item.cantidad,
         image:this.props.item.imagen,
         outside:this.props.item.exterior,
-        image64:null,
-        imageFile:null
       }
     }
 
@@ -40,25 +38,17 @@ class InventaryDetailItemPage extends Component {
 
   _renderImage(){
     if (this.props.item.imagen){
+      let image = (this.props.item.imagenMaxi?this.props.item.imagenMaxi:this.props.item.imagen)
+      let title = (this.state.name?this.state.name:'')
+      console.log(image);
       return(
-        <View style={styles.imageContainer}>
-          <Lightbox underlayColor='transparent' activeProps={{flex:1, borderRadius:0, borderWidth:0}}
-          swipeToDismiss={false} renderContent={()=>{
-            return(
-              <PhotoView
-                  source={{uri: this.props.item.imagenMaxi}}
-                  minimumZoomScale={1}
-                  maximumZoomScale={3}
-                  androidScaleType="center"
-                  onLoad={() => console.log("Image loaded!")}
-                  style={{width: screenWidth, height: screenHeight}} />
-            )}}>
-            <Image
-              style={styles.image}
-              resizeMode="cover"
-              source={{ uri: this.props.item.imagen }} />
-          </Lightbox>
-        </View>
+        <TouchableOpacity style={styles.imageContainer}
+          onPress={()=>{Actions.fullScreenPage({image:image, title:title})}}>
+          <Image
+            style={styles.image}
+            resizeMode="cover"
+            source={{ uri: this.props.item.imagen }} />
+        </TouchableOpacity>
       )
     }
   }

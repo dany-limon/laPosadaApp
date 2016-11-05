@@ -77,10 +77,10 @@ export default class CellInfo extends Component {
         <TouchableOpacity
           style={[styles.imageHeight, styles.imageWidth, {marginRight:5*initialScale}]}
           onPress={()=>{Actions.fullScreenPage({image:image, title:title})}}>
-        <Image
-          style={[styles.imageHeight, styles.imageBorderRadius]}
-          resizeMode="cover"
-          source={{ uri: this.props.imageUriMini }} />
+          <Image
+            style={[styles.imageHeight, styles.imageBorderRadius]}
+            resizeMode="cover"
+            source={{ uri: this.props.imageUriMini }} />
         </TouchableOpacity>
       )
     }else{
