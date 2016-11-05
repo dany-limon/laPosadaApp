@@ -1,7 +1,8 @@
 import * as types from '../ActionTypes'
 
 const initialState = {
-  firebase:null
+  firebase:null,
+  loginInProgress:false
 };
 
 export default function appDataState(state = initialState, action = {}) {
@@ -16,6 +17,11 @@ export default function appDataState(state = initialState, action = {}) {
         ...state,
         firebase: action.firebase,
       }
+      case types.UPDATE_LOGIN_PROGRESS:
+        return {
+          ...state,
+          loginInProgress: action.value,
+        }
     default:
       return state
   }

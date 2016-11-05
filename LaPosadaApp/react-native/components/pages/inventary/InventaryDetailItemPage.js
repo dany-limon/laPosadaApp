@@ -8,10 +8,13 @@ import ImagePicker from 'react-native-image-picker'
 import * as InventaryAction from '../../../redux/actions/InventaryActions'
 import {InputText} from '../../widgets/'
 import Lightbox from 'react-native-lightbox'
+import PhotoView from 'react-native-photo-view'
 import * as AppFonts from '../../../commons/Fonts'
 
 const IPHONE6_WIDTH = 375;
-const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
+const screenWidth = Dimensions.get('window').width
+const screenHeight = Dimensions.get('window').height
+const initialScale = screenWidth / IPHONE6_WIDTH
 
 class InventaryDetailItemPage extends Component {
   constructor(props) {
@@ -39,7 +42,17 @@ class InventaryDetailItemPage extends Component {
     if (this.props.item.imagen){
       return(
         <View style={styles.imageContainer}>
-          <Lightbox underlayColor='transparent' activeProps={{flex:1, borderRadius:0, borderWidth:0}} navigator={this.props.navigator} >
+          <Lightbox underlayColor='transparent' activeProps={{flex:1, borderRadius:0, borderWidth:0}}
+          swipeToDismiss={false} renderContent={()=>{
+            return(
+              <PhotoView
+                  source={{uri: this.props.item.imagenMaxi}}
+                  minimumZoomScale={1}
+                  maximumZoomScale={3}
+                  androidScaleType="center"
+                  onLoad={() => console.log("Image loaded!")}
+                  style={{width: screenWidth, height: screenHeight}} />
+            )}}>
             <Image
               style={styles.image}
               resizeMode="cover"

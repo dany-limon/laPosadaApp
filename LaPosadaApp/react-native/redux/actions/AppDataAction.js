@@ -1,7 +1,7 @@
 import * as types from '../ActionTypes'
 import * as FirebaseUtils from '../../utils/FirebaseUtils'
 import {Actions} from 'react-native-router-flux'
-
+import {Alert} from 'react-native'
 
 //*************************************************
 // Firebase
@@ -39,12 +39,32 @@ export function initializeApp(){
     }
 }
 
+function updateLoginProgress(value) {
+  return {
+    type: types.UPDATE_LOGIN_PROGRESS,
+    value:value
+  }
+}
+
 //Login en firebase
 export function login(email, password){
   return (dispatch, getState)=>{
+      dispatch(updateLoginProgress(true))
       const state = getState()
       let firebase = state.appDataState.firebase
       FirebaseUtils.login(firebase, email, password)
+      .then(()=>{
+        dispatch(updateLoginProgress(false))
+      }).catch((err) => {
+        console.log(err);
+        Alert.alert( 'No se ha podido acceder', err, [ {text: 'Aceptar'}, ] )
+        setTimeout(() => {
+          dispatch(updateLoginProgress(false))
+        }, 500);
+
+      });
+
+
     }
 }
 
@@ -75,7 +95,7 @@ function initializeFirebase(dispatch){
   //detectamos el estado del usuario
   firebaseApp.auth().onAuthStateChanged(function(user) {
     if (user) {
-      Actions.inventary()
+      Actions.home()
     } else {
       Actions.login()
     }

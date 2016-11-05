@@ -5,6 +5,7 @@ import {Dimensions, StyleSheet, Text, View, Alert, Image, TouchableOpacity, Plat
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import ImagePicker from 'react-native-image-picker'
+import Spinner from 'react-native-spinkit'
 import * as InventaryAction from '../../../redux/actions/InventaryActions'
 import {InputText} from '../../widgets/'
 import * as AppConfiguration from '../../../commons/Configuration'
@@ -29,14 +30,13 @@ class InventaryEditItemPage extends Component {
 
   _handlePressNewPhoto() {
       ImagePicker.showImagePicker(AppConfiguration.imageCaptureOptions, (response) => {
-        console.log('Response = ', response);
+        //console.log('Response = ', response);
         if (response.didCancel) { console.log('User cancelled photo picker'); }
         else if (response.error) { console.log('ImagePicker Error: ', response.error); }
         else if (response.customButton) { console.log('User tapped custom button: ', response.customButton); }
         else {
           const source64 = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
           const uri = (Platform.OS === 'ios'?response.uri.replace('file://', ''):response.uri)
-
           this.setState({
             image64:response.data,
             imageFile:uri
@@ -81,6 +81,37 @@ class InventaryEditItemPage extends Component {
       </View>
     )
   }
+
+  _renderAceptButton(){
+    if (!this.props.uploadingItem){
+      return(
+        <View style={{flexDirection:'row', marginBottom:60*initialScale}}>
+          <TouchableOpacity style={{flex:1, backgroundColor:'#722f37', padding:15*initialScale, borderRadius:15*initialScale}}
+            onPress={()=>{
+
+              if (!this.state.name || this.state.name==''){
+                Alert.alert( 'Faltan datos', 'Debes escribir al menos un nombre.', [ {text: 'Aceptar'}, ] )
+                return
+              }
+
+              if(this.props.item){
+                this.props.updateItem(this.props.item, this.state )
+              }else{
+                this.props.addNewItem(this.state )
+              }
+            }}>
+            <Text style={{alignSelf:'center', fontSize:20*initialScale, color:'white', fontFamily:AppFonts.medium}}>
+              {(this.props.item?'Actualizar':'Guardar')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }else{
+      return(
+        <Spinner style={{alignSelf:'center'}} type='FadingCircleAlt' color={AppColors.main} size={50*initialScale}/>
+      )
+    }
+  }
   render(){
     return (
       <ScrollView style={styles.container} showsVerticalScrollIndicator ={false}>
@@ -115,21 +146,8 @@ class InventaryEditItemPage extends Component {
           </View>
 
           <View style={{height:40*initialScale}}/>
+          {this._renderAceptButton()}
 
-          <View style={{flexDirection:'row', marginBottom:60*initialScale}}>
-            <TouchableOpacity style={{flex:1, backgroundColor:'#722f37', padding:15*initialScale, borderRadius:15*initialScale}}
-              onPress={()=>{
-                if(this.props.item){
-                  this.props.updateItem(this.props.item, this.state )
-                }else{
-                  this.props.addNewItem(this.state )
-                }
-              }}>
-              <Text style={{alignSelf:'center', fontSize:20*initialScale, color:'white', fontFamily:AppFonts.medium}}>
-                {(this.props.item?'Actualizar':'Guardar')}
-              </Text>
-            </TouchableOpacity>
-          </View>
 
       </ScrollView>
     )
@@ -154,6 +172,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
   return {
     fbDataBase:state.appDataState.fbDataBase,
+    uploadingItem:state.inventaryState.fbDataBase,
   }
 }
 

@@ -1,12 +1,14 @@
 import * as FirebaseUtils from '../../utils/FirebaseUtils'
 import * as types from '../ActionTypes'
 
+
 /*******************************************
 * Constantes
 *******************************************/
 const PATH = 'inventario'
 const ITEMS_PATH = PATH + '/elementos'
 const IMAGE_PATH = 'imagenes/inventario'
+
 
 
 /*
@@ -69,16 +71,18 @@ export function addNewItem(stateObj){
         FirebaseUtils.addNewObject(firebase, ITEMS_PATH, item)
         dispatch(updateLastUpdatedate())
       }else{
-        FirebaseUtils.uploadImageFileToFirebase(firebase, IMAGE_PATH, stateObj.imageFile)
-        .then((url)=>{
-          item.imagen = url
+        FirebaseUtils.uploadMultipleImageResolutionFirebase(firebase, IMAGE_PATH, stateObj.imageFile)
+        .then((urls)=>{
+          item.imagen = urls.url
+          item.imagenMini = urls.urlMini
+          item.imagenMaxi = urls.urlMaxi
           FirebaseUtils.addNewObject(firebase, ITEMS_PATH, item)
           dispatch(updateLastUpdatedate())
-        }).catch(error => {
-          console.log(error)
+        }).catch((err) => {
+          console.log(err);
           FirebaseUtils.addNewObject(firebase, ITEMS_PATH, item)
           dispatch(updateLastUpdatedate())
-        })
+        });
       }
   }
 }
@@ -146,9 +150,11 @@ export function updateItem(item, objState){
       if (!objState.imageFile){
         FirebaseUtils.updateObject(firebase, itemPath, object)
       }else{
-        FirebaseUtils.uploadImageFileToFirebase(firebase, IMAGE_PATH, objState.imageFile)
-        .then((url)=>{
-          object.imagen = url
+        FirebaseUtils.uploadMultipleImageResolutionFirebase(firebase, IMAGE_PATH, objState.imageFile)
+        .then((urls)=>{
+          object.imagen = urls.url
+          object.imagenMini = urls.urlMini
+          object.imagenMaxi = urls.urlMaxi
           FirebaseUtils.updateObject(firebase, itemPath, object)
         }).catch(error => {
           console.log(error)

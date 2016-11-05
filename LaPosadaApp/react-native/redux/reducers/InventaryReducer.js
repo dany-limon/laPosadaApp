@@ -1,7 +1,8 @@
 import * as types from '../ActionTypes'
 
 const initialState = {
-  items:null
+  items:null,
+  uploadingItem:false
 };
 
 export default function inventaryState(state = initialState, action = {}) {
@@ -11,6 +12,7 @@ export default function inventaryState(state = initialState, action = {}) {
         ...state,
         items: action.items,
       }
+
     default:
       return state
   }

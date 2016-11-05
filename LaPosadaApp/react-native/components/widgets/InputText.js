@@ -18,12 +18,14 @@ export default class InputText extends Component {
     label: React.PropTypes.string,
     value: React.PropTypes.string,
     keyboardType: React.PropTypes.string,
+    secureTextEntry: React.PropTypes.bool,
   }
 
   static defaultProps = {
     label: '',
     value: '',
-    keyboardType: 'default'
+    keyboardType: 'default',
+    secureTextEntry : false
   }
 
   render() {
@@ -35,6 +37,7 @@ export default class InputText extends Component {
         inputStyle={styles.inputStyle}
         labelStyle={styles.labelStyle}
         value={this.props.value}
+        secureTextEntry={this.props.secureTextEntry}
         keyboardType={this.props.keyboardType}
       />
     )

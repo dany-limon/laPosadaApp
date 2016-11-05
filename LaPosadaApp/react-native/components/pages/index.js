@@ -4,6 +4,8 @@ import InventaryEditItemPage from './inventary/InventaryEditItemPage'
 import LoginPage from './login/LoginPage'
 import RestorePaswordPage from './login/RestorePaswordPage'
 import SplashPage from './SplashPage'
+import HomePage from './HomePage'
+import FullScreenPage from './commons/FullScreenPage'
 
 export {
   InventaryDetailItemPage,
@@ -11,5 +13,7 @@ export {
   InventaryEditItemPage,
   LoginPage,
   RestorePaswordPage,
-  SplashPage
+  SplashPage,
+  HomePage,
+  FullScreenPage
 }

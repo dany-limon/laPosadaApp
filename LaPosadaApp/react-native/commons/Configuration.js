@@ -5,8 +5,8 @@ export const imageCaptureOptions = {
     cancelButtonTitle:'Cancelar',
     allowsEditing: false,
     quality: 0.75,
-    maxWidth: 480,
-    maxHeight: 640,
+    maxWidth: 640,
+    maxHeight: 960,
     storageOptions: {
       skipBackup: true
     }

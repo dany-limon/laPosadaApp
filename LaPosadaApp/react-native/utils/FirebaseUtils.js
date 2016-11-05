@@ -1,9 +1,12 @@
+//COnvertir imagen a blob para evitar bug de Firebase
 //FUENTE: https://github.com/wkh237/react-native-fetch-blob
-
 import RNFetchBlob from 'react-native-fetch-blob'
 const Blob = RNFetchBlob.polyfill.Blob
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
+
+//Redimensionar imagenes
+import ImageResizer from 'react-native-image-resizer';
 
 import store from 'react-native-simple-store'
 import {Alert} from 'react-native'
@@ -51,19 +54,22 @@ export function addNewObject(firebase, path, object){
 }
 
 export function login(firebase, email, password){
-  firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    console.log(errorCode + ' ' + errorMessage);
-    if (errorCode=='auth/wrong-password'){
-      Alert.alert( 'No se ha podido acceder','La contraseña no es válida', [ {text: 'Aceptar'}, ] )
-    }else if (errorCode=='auth/user-not-found'){
-      Alert.alert( 'No se ha podido acceder','El usuario no está registrado', [ {text: 'Aceptar'}, ] )
-    }else if (errorCode=='auth/invalid-email'){
-      Alert.alert( 'No se ha podido acceder','El email introducido no es válido', [ {text: 'Aceptar'}, ] )
-    }else{
-      Alert.alert( 'No se ha podido acceder', error.message, [ {text: 'Aceptar'}, ] )
-    }
+  return new Promise(function (fulfill, reject){
+    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(errorCode + ' ' + errorMessage);
+      if (errorCode=='auth/wrong-password'){
+        reject('La contraseña no es válida')
+      }else if (errorCode=='auth/user-not-found'){
+        reject('El usuario no está registrado')
+      }else if (errorCode=='auth/invalid-email'){
+      reject('El email introducido no es válido')
+      }else{
+        reject(error.message)
+      }
+      fulfill()
+    })
   })
 }
 
@@ -156,4 +162,32 @@ export function storeCacheObject(key, object){
         reject(false)
       })
     })
+}
+
+export function uploadMultipleImageResolutionFirebase(firebase, folder, imageUri){
+  return new Promise(function (fulfill, reject){
+    let urlMini = null
+    let urlMedi = null
+    ImageResizer.createResizedImage(imageUri, 160, 160, 'JPEG', 50)
+    .then((resizedImageUri) => {
+      console.log('resized: ' + resizedImageUri);
+      return uploadImageFileToFirebase(firebase, folder, resizedImageUri)
+    }).then((urlMiniTemp)=>{
+      console.log('Subida foto mini', urlMiniTemp);
+      urlMini = urlMiniTemp
+      return ImageResizer.createResizedImage(imageUri, 320, 320, 'JPEG', 75)
+    }).then((resizedImageUri) => {
+      console.log('resized: ' + resizedImageUri);
+      return uploadImageFileToFirebase(firebase, folder, resizedImageUri)
+    }).then((urlMediTemp)=>{
+      urlMedi = urlMediTemp
+      return uploadImageFileToFirebase(firebase, folder, imageUri)
+    }).then((url)=>{
+      console.log('Subida foto maxi', url);
+      fulfill({urlMini:urlMini, url:urlMedi, urlMaxi:url})
+    }).catch((error) => {
+      console.log(error);
+      reject(error)
+    });
+  })
 }

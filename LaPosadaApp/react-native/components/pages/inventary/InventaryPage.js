@@ -30,7 +30,7 @@ class InventaryPage extends Component {
 
   _renderNoData(){
     return (
-      <View style={{flex:1, justifyContent:'center'}}>
+      <View style={{flex:1, justifyContent:'center', backgroundColor:'#ececec'}}>
         <Text style={{color:'gray', alignSelf:'center', fontSize:30}}>
         Sin datos
         </Text>
@@ -43,31 +43,33 @@ class InventaryPage extends Component {
     let dataSource = ds.cloneWithRows(this.props.items)
 
     return(
-      <ListView
-        style={{flex:1, backgroundColor:'#ececec'}}
-        enableEmptySections={true}
-        dataSource={dataSource}
-        renderRow={(rowData, sectionID, rowID, highlightRow) => {
-            return(
-              <CellInfo
-                header={'ARTICULO'}
-                title={rowData.nombre}
-                subtitle={rowData.descripcion}
-                imageUri={rowData.imagen}
-                info={ (rowData.cantidad?rowData.cantidad + ' uni.':null) }
-                actionLabels={['Editar', 'Borrar']}
-                onPressAction={(index)=>{
-                  if (index==0){
-                    Actions.inventaryEditItem({item:rowData, title:rowData.nombre})
-                  }else if (index==1){
-                    this._handleDelete(rowData)
-                  }
-                }}
-                onPress={()=>{Actions.inventaryDetailItem({item:rowData, title:rowData.nombre}) }}
-              />
-            )
-        }}
-      />
+      <View style={{flex:1, backgroundColor:'#ececec'}}>
+        <ListView
+          enableEmptySections={true}
+          dataSource={dataSource}
+          renderRow={(rowData, sectionID, rowID, highlightRow) => {
+              return(
+                <CellInfo
+                  header={'ARTICULO'}
+                  title={rowData.nombre}
+                  subtitle={rowData.descripcion}
+                  imageUriMaxi={rowData.imagenMaxi}
+                  imageUriMini={rowData.imagenMini}
+                  info={ (rowData.cantidad?rowData.cantidad + ' uni.':null) }
+                  actionLabels={['Editar', 'Borrar']}
+                  onPressAction={(index)=>{
+                    if (index==0){
+                      Actions.inventaryEditItem({item:rowData, title:rowData.nombre})
+                    }else if (index==1){
+                      this._handleDelete(rowData)
+                    }
+                  }}
+                  onPress={()=>{Actions.inventaryDetailItem({item:rowData, title:rowData.nombre}) }}
+                />
+              )
+          }}
+        />
+      </View>
     )
   }
 
@@ -75,13 +77,10 @@ class InventaryPage extends Component {
     return(
       <ActionButton buttonColor={AppColors.main} bgColor={'#00000044'} btnOutRange={'gray'} hideShadow={true}>
             <ActionButton.Item buttonColor={AppColors.main} title='Nuevo elemento'
-             onPress={()=>{Actions.inventaryEditItem({title:'Nuevo elemento'})}}>
+             onPress={()=>{ Actions.inventaryEditItem({title:'Nuevo elemento'}) }}>
                 <Icon name="md-create" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-            <ActionButton.Item buttonColor={AppColors.main} title='Cerrar sesion'
-             onPress={this.props.closeSesion}>
-                <Icon name="md-sync" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
+
       </ActionButton>
     )
   }

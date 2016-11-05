@@ -8,15 +8,17 @@ export default class NavBarIcon extends Component {
 
   static propTypes = {
     onPress: React.PropTypes.func,
+    name: React.PropTypes.string,
   }
 
   static defaultProps = {
+    name:"plus",
   }
 
     render() {
       return (
         <TouchableOpacity onPress={this.props.onPress}>
-          <Icon name="plus" size={25}  />
+          <Icon name={this.props.name} size={25} color='white' />
         </TouchableOpacity>
       )
     }

@@ -12,6 +12,7 @@ import * as AppFonts from './commons/Fonts'
 //*************************************************
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
 
+import DropdownAlert from 'react-native-dropdownalert'
 
 //*************************************************
 // Redux
@@ -23,18 +24,22 @@ import * as AppDataAction from './redux/actions/AppDataAction'
 //*************************************************
 // Pantallas
 //*************************************************
-import {SplashPage, LoginPage, RestorePaswordPage, InventaryPage, InventaryDetailItemPage, InventaryEditItemPage} from './components/pages/'
+import {NavBarIcon} from './components/widgets/'
+import {SplashPage, LoginPage, RestorePaswordPage, HomePage, InventaryPage,
+  InventaryDetailItemPage, InventaryEditItemPage, FullScreenPage} from './components/pages/'
 const scenes = Actions.create(
   <Scene key="root" >
-      <Scene key="splash"  component={SplashPage} hideNavBar={true} type='reset' hideBackImage={true} panHandlers={null} />
+      <Scene key="splash" initial={true} component={SplashPage} hideNavBar={true} type='reset' hideBackImage={true} panHandlers={null} />
       <Scene key="login" component={LoginPage} title='Acceso' hideNavBar={false} type='reset' hideBackImage={true} panHandlers={null} />
-      <Scene key="restorePassword" component={RestorePaswordPage} title='Restablecer'/>
-      <Scene key="inventary" initial={true} component={InventaryPage} title='Inventario' hideNavBar={false} type='reset' hideBackImage={true} panHandlers={null} />
-      <Scene key="inventaryDetailItem" component={InventaryDetailItemPage} title='Detalle'/>
-      <Scene key="inventaryEditItem" component={InventaryEditItemPage} title='Editar'/>
+      <Scene key="home" component={HomePage} title='La Posada' hideNavBar={false} type='reset' hideBackImage={true} panHandlers={null} renderRightButton={()=>{ return( <NavBarIcon name='power-off' onPress={()=>{self.props.closeSesion()}}/> ) }} />
+      <Scene key="restorePassword" component={RestorePaswordPage} title='Restablecer' hideNavBar={false} />
+      <Scene key="inventary" component={InventaryPage} title='Inventario' hideNavBar={false} type='reset' hideBackImage={true} panHandlers={null} />
+      <Scene key="inventaryDetailItem" component={InventaryDetailItemPage} title='Detalle' hideNavBar={false} />
+      <Scene key="inventaryEditItem" component={InventaryEditItemPage} title='Editar' hideNavBar={false} />
+      <Scene key="fullScreenPage" component={FullScreenPage} panHandlers={null} direction='vertical'/>
   </Scene>
 )
-
+var self = null
 const IPHONE6_WIDTH = 375;
 const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
 
@@ -48,6 +53,7 @@ class LaPosadaApp extends Component {
       super(props)
 
       this.props.initializeApp()
+      self = this
     }
 
     componentWillMount() {
@@ -103,6 +109,9 @@ function mapDispatchToProps(dispatch, props) {
   return {
     initializeApp:()=>{
       dispatch(AppDataAction.initializeApp())
+    },
+    closeSesion:()=>{
+      dispatch(AppDataAction.closeSesion())
     },
     dispatch:dispatch
   };

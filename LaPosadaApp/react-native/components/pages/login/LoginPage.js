@@ -3,6 +3,7 @@
 import React, { Component, } from 'react'
 import {StyleSheet, Dimensions, Text, View, ListView, Image, TouchableOpacity, Alert} from 'react-native'
 import {Actions} from 'react-native-router-flux'
+import Spinner from 'react-native-spinkit'
 import { connect } from 'react-redux'
 import * as AppDataActions from '../../../redux/actions/AppDataAction'
 import {InputText, Button, LabelButton} from '../../widgets/'
@@ -22,6 +23,27 @@ class LoginPage extends Component {
       }
     }
 
+  _renderLoginButton(){
+    if (!this.props.loginInProgress){
+      return(
+        <View>
+          <Button label='Acceder' onPress={()=>{
+            console.log('Accediendo');
+            this.props.login(this.state.email, this.state.password)
+          }} />
+
+          <LabelButton
+            label='He olvidado mi contraseña'
+            onPress={()=>{ Actions.restorePassword() }}/>
+        </View>
+      )
+    }else{
+      return(
+        <Spinner style={{alignSelf:'center'}} type='FadingCircleAlt' color={AppColors.main} size={50*initialScale}/>
+      )
+    }
+  }
+
   render() {
     return(
       <View style={styles.container}>
@@ -33,20 +55,12 @@ class LoginPage extends Component {
         <View style={{height:20*initialScale}} />
         <InputText
           label={'Contraseña'}
+          secureTextEntry={true}
           onChangeText={(password) => this.setState({password})}
           value={this.state.password}/>
 
         <View style={{height:40*initialScale}} />
-        <Button label='Acceder' onPress={()=>{
-          console.log('Accediendo');
-          this.props.login(this.state.email, this.state.password)
-        }} />
-
-        <LabelButton
-          label='He olvidado mi contraseña'
-          onPress={()=>{ Actions.restorePassword() }}/>
-
-
+        {this._renderLoginButton()}
       </View>
     )
   }
@@ -70,6 +84,7 @@ const styles = StyleSheet.create({
 */
 function mapStateToProps(state) {
   return {
+    loginInProgress: state.appDataState.loginInProgress
   }
 }
 

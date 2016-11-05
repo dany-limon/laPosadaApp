@@ -2,11 +2,14 @@
 
 import React, { Component, } from 'react'
 import {StyleSheet, Dimensions, Text, View, ListView, Image, TouchableOpacity} from 'react-native'
-import Lightbox from 'react-native-lightbox'
 import * as AppFonts from '../../commons/Fonts'
+import * as AppColors from '../../commons/Colors'
+import {Actions} from 'react-native-router-flux'
 
 const IPHONE6_WIDTH = 375;
-const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
+const screenWidth = Dimensions.get('window').width
+const screenHeight = Dimensions.get('window').height
+const initialScale = screenWidth / IPHONE6_WIDTH
 
 export default class CellInfo extends Component {
 
@@ -17,7 +20,8 @@ export default class CellInfo extends Component {
     header: React.PropTypes.string,
     title: React.PropTypes.string,
     subtitle: React.PropTypes.string,
-    imageUri: React.PropTypes.string,
+    imageUriMaxi: React.PropTypes.string,
+    imageUriMini: React.PropTypes.string,
     info: React.PropTypes.string,
   }
 
@@ -25,7 +29,8 @@ export default class CellInfo extends Component {
     header:null,
     title:null,
     subtitle:null,
-    imageUri:null,
+    imageUriMaxi:null,
+    imageUriMini:null,
     info:null,
     actionLabels:null
   }
@@ -65,28 +70,30 @@ export default class CellInfo extends Component {
   }
 
   _renderImage(){
-    if (this.props.imageUri){
+    if (this.props.imageUriMaxi && this.props.imageUriMini){
+      let image = this.props.imageUriMaxi
+      let title = (this.props.title?this.props.title:'')
       return(
-        <View style={{ height:56*initialScale, width:56*initialScale,  marginRight:5*initialScale}}>
-          <Lightbox underlayColor='transparent' activeProps={{flex:1, borderRadius:0}} springConfig={{ tension: 30, friction: 3 }} onRequestClose={()=>{}}>
-            <Image
-              style={{ height:56*initialScale, borderRadius:28*initialScale, }}
-              resizeMode="cover"
-              source={{ uri: this.props.imageUri }} />
-          </Lightbox>
-        </View>
+        <TouchableOpacity
+          style={[styles.imageHeight, styles.imageWidth, {marginRight:5*initialScale}]}
+          onPress={()=>{Actions.fullScreenPage({image:image, title:title})}}>
+        <Image
+          style={[styles.imageHeight, styles.imageBorderRadius]}
+          resizeMode="cover"
+          source={{ uri: this.props.imageUriMini }} />
+        </TouchableOpacity>
       )
     }else{
       return(
-        <View style={{ height:56*initialScale, width:56*initialScale, borderRadius:28*initialScale,  marginRight:5*initialScale, backgroundColor:'#DFDFDF'}} />
+        <View style={[styles.imageHeight, styles.imageWidth, styles.imageBorderRadius, { marginRight:5*initialScale, backgroundColor:'#DFDFDF'}]} />
       )
     }
   }
 
   _renderAction(item, index){
     return(
-      <TouchableOpacity key={index} style={{padding:15*initialScale}} onPress={this.props.onPressAction.bind(this, index)}>
-        <Text  style={styles.button}> {item} </Text>
+      <TouchableOpacity key={index} style={styles.actionContainer} onPress={this.props.onPressAction.bind(this, index)}>
+        <Text style={styles.button}> {item} </Text>
       </TouchableOpacity>
 
     )
@@ -96,9 +103,7 @@ export default class CellInfo extends Component {
     if (this.props.actionLabels){
       return(
         <View style={{ justifyContent: 'space-between', flexDirection:'row'}} >
-          {
-            this.props.actionLabels.map(this._renderAction.bind(this))
-          }
+          {this.props.actionLabels.map(this._renderAction.bind(this))  }
         </View>
       )
     }
@@ -106,26 +111,18 @@ export default class CellInfo extends Component {
 
   render() {
     return(
-      <TouchableOpacity style={styles.container}
-          onPress={this.props.onPress}>
-
+      <TouchableOpacity style={styles.container} onPress={this.props.onPress}>
           {this._renderHeader()}
-
-          <View style={{flexDirection:'row', paddingLeft:20*initialScale, paddingBottom:15*initialScale, paddingRight:20*initialScale }}>
-
+          <View style={styles.mainContainer}>
               {this._renderImage()}
-              <View style={{flex:1,alignSelf:'center', marginLeft:10*initialScale}}>
+              <View style={styles.centerContainer}>
                 {this._renderTitle()}
                 {this._renderSubtitle()}
               </View>
-
               {this._renderInfo()}
           </View>
-
-        <View style={{flex:1, height:1, marginTop:5*initialScale, backgroundColor:'#DFDFDF'}} />
-
+        <View style={styles.separator} />
         {this._renderActions()}
-
       </TouchableOpacity>
     )
   }
@@ -137,12 +134,12 @@ export default class CellInfo extends Component {
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor:'#FEFEFE',
+    backgroundColor:AppColors.white,
     marginTop:10*initialScale,
     marginLeft:15*initialScale,
     marginRight:15*initialScale,
     borderRadius:10*initialScale,
-    borderColor:'#DFDFDF',
+    borderColor:AppColors.graySepator,
     borderWidth:1
   },
   title:{
@@ -159,16 +156,45 @@ const styles = StyleSheet.create({
     fontFamily:AppFonts.medium
   },
   button:{
-    color:'#722f37',
+    color:AppColors.main,
     fontSize:16*initialScale,
     fontFamily:AppFonts.light
   },
   header:{
-    color:'gray',
+    color:AppColors.gray,
     paddingLeft:15*initialScale,
     paddingTop:15*initialScale,
     paddingBottom:15*initialScale,
     paddingRight:15*initialScale,
     fontFamily:AppFonts.lightItalic
+  },
+  actionContainer:{
+    padding:15*initialScale
+  },
+  imageHeight:{
+    height:56*initialScale
+  },
+  imageWidth:{
+    width:56*initialScale
+  },
+  imageBorderRadius:{
+    borderRadius:28*initialScale
+  },
+  separator:{
+    flex:1,
+    height:1,
+    marginTop:5*initialScale,
+    backgroundColor:AppColors.graySepator
+  },
+  centerContainer:{
+    flex:1,
+    alignSelf:'center',
+    marginLeft:10*initialScale
+  },
+  mainContainer:{
+    flexDirection:'row',
+    paddingLeft:20*initialScale,
+    paddingBottom:15*initialScale,
+    paddingRight:20*initialScale
   }
 })
