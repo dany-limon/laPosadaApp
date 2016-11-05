@@ -6,6 +6,7 @@ import * as AppFonts from '../../commons/Fonts'
 import * as AppColors from '../../commons/Colors'
 import {Actions} from 'react-native-router-flux'
 
+
 const IPHONE6_WIDTH = 375;
 const screenWidth = Dimensions.get('window').width
 const screenHeight = Dimensions.get('window').height

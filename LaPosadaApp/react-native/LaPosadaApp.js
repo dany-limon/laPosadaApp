@@ -26,8 +26,7 @@ import * as AppDataAction from './redux/actions/AppDataAction'
 //*************************************************
 import {NavBarIcon} from './components/widgets/'
 import {SplashPage, LoginPage, RestorePaswordPage, HomePage, InventaryPage,
-  InventaryDetailItemPage, InventaryEditItemPage, FullScreenPage,
-  InventarySearchPage} from './components/pages/'
+  InventaryDetailItemPage, InventaryEditItemPage, FullScreenPage} from './components/pages/'
 const scenes = Actions.create(
   <Scene key="root" >
       <Scene key="splash" initial={true} component={SplashPage} hideNavBar={true} type='reset' hideBackImage={true} panHandlers={null} />
@@ -35,7 +34,6 @@ const scenes = Actions.create(
       <Scene key="home" component={HomePage} title='La Posada' hideNavBar={false} type='reset' hideBackImage={true} panHandlers={null} renderRightButton={()=>{ return( <NavBarIcon name='power-off' onPress={()=>{self.props.closeSesion()}}/> ) }} />
       <Scene key="restorePassword" component={RestorePaswordPage} title='Restablecer' hideNavBar={false} />
       <Scene key="inventary" component={InventaryPage} title='Inventario' hideNavBar={false} type='reset' hideBackImage={true} panHandlers={null} />
-      <Scene key="inventarySeacrh" component={InventarySearchPage} title='Buscar' hideNavBar={false} direction='vertical'panHandlers={null} />
       <Scene key="inventaryDetailItem" component={InventaryDetailItemPage} title='Detalle' hideNavBar={false} />
       <Scene key="inventaryEditItem" component={InventaryEditItemPage} title='Editar' hideNavBar={false} />
       <Scene key="fullScreenPage" component={FullScreenPage} panHandlers={null} direction='vertical' />

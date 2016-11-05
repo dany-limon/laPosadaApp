@@ -1,7 +1,7 @@
 import * as types from '../ActionTypes'
 import * as FirebaseUtils from '../../utils/FirebaseUtils'
-import {Actions} from 'react-native-router-flux'
-import {Alert} from 'react-native'
+import { Actions } from 'react-native-router-flux'
+import { Alert } from 'react-native'
 
 //*************************************************
 // Firebase

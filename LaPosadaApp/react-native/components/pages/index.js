@@ -1,7 +1,6 @@
 import InventaryDetailItemPage from './inventary/InventaryDetailItemPage'
 import InventaryPage from './inventary/InventaryPage'
 import InventaryEditItemPage from './inventary/InventaryEditItemPage'
-import InventarySearchPage from './inventary/InventarySearchPage'
 import LoginPage from './login/LoginPage'
 import RestorePaswordPage from './login/RestorePaswordPage'
 import SplashPage from './SplashPage'
@@ -16,6 +15,5 @@ export {
   RestorePaswordPage,
   SplashPage,
   HomePage,
-  FullScreenPage,
-  InventarySearchPage
+  FullScreenPage
 }
