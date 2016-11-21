@@ -84,6 +84,6 @@ const styles = StyleSheet.create({
     fontSize:30,
     color:AppColors.main,
     backgroundColor:'transparent',
-    padding:5, 
+    padding:5,
   }
 })

@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     fontFamily:AppFonts.bold
   },
   subtitle:{
-    fontSize:14*initialScale,
+    fontSize:16*initialScale,
     marginTop:3*initialScale,
     fontFamily:AppFonts.regular
   },

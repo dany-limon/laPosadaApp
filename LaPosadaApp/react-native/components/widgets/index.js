@@ -4,6 +4,7 @@ import ImageDialog from './ImageDialog'
 import Button from './Button'
 import LabelButton from './LabelButton'
 import SearchHeader from './SearchHeader'
+import PageIndicator from './PageIndicator'
 
 export {
   InputText,
@@ -11,5 +12,6 @@ export {
   ImageDialog,
   Button,
   LabelButton,
-  SearchHeader
+  SearchHeader,
+  PageIndicator
 }

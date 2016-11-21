@@ -6,6 +6,7 @@ import RestorePaswordPage from './login/RestorePaswordPage'
 import SplashPage from './SplashPage'
 import HomePage from './HomePage'
 import FullScreenPage from './commons/FullScreenPage'
+import StatutesPage from './statutes/StatutesPage'
 
 export {
   InventaryDetailItemPage,
@@ -15,5 +16,6 @@ export {
   RestorePaswordPage,
   SplashPage,
   HomePage,
-  FullScreenPage
+  FullScreenPage,
+  StatutesPage
 }
