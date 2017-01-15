@@ -11,7 +11,7 @@ import _ from 'lodash'
 import * as InventaryActions from '../../../redux/actions/InventaryActions'
 import * as AppDataActions from '../../../redux/actions/AppDataAction'
 import {CellInfo} from '../../cell/'
-import {SearchHeader} from '../../widgets/'
+import {SearchHeader, GotoUpButton} from '../../widgets/'
 import * as AppColors from '../../../commons/Colors'
 import * as AppFonts from '../../../commons/Fonts'
 
@@ -26,6 +26,7 @@ class InventaryPage extends Component {
       this.state = {
         text: '' ,
         filter:false,
+        showButtonUp:false,
       };
     }
 
@@ -44,9 +45,7 @@ class InventaryPage extends Component {
   _renderNoData(){
     return (
       <View style={{flex:1, justifyContent:'center', backgroundColor:'#ececec'}}>
-        <Text style={{color:'gray', alignSelf:'center', fontSize:30}}>
-        Sin datos
-        </Text>
+
       </View>
     )
   }
@@ -58,10 +57,18 @@ class InventaryPage extends Component {
     })
   }
 
+  _handleScroll(event){
+    let showButtonUp = (event.nativeEvent.contentOffset.y > 100)
+    if (this.state.showButtonUp != showButtonUp)
+    this.setState({
+      showButtonUp:showButtonUp
+    })
+  }
+
   _renderSearchHeader(){
     return(
       <SearchHeader
-        placeholder = 'Buscar por nombre o descripción'
+        placeholder = 'Filtrar por nombre o descripción'
         onPressSearch = {(text)=>{ this._handleSearch(text) }}/>
     )
   }
@@ -73,21 +80,21 @@ class InventaryPage extends Component {
   _renderRow(rowData, sectionID, rowID, highlightRow){
     return(
       <CellInfo
-        header={'ARTICULO'}
-        title={rowData.nombre}
-        subtitle={rowData.descripcion}
-        imageUriMaxi={rowData.imagenMaxi}
-        imageUriMini={rowData.imagenMini}
-        info={ (rowData.cantidad?rowData.cantidad + ' uni.':null) }
+        header={rowData.type}
+        title={rowData.name}
+        subtitle={rowData.description}
+        imageUriMaxi={rowData.imageMaxi}
+        imageUriMini={rowData.imageMini}
+        info={ (rowData.quantity?rowData.quantity + ' uni.':null) }
         actionLabels={['Editar', 'Borrar']}
         onPressAction={(index)=>{
           if (index==0){
-            Actions.inventaryEditItem({item:rowData, title:rowData.nombre})
+            Actions.inventaryEditItem({item:rowData, title:rowData.name})
           }else if (index==1){
             this._handleDelete(rowData)
           }
         }}
-        onPress={()=>{Actions.inventaryDetailItem({item:rowData, title:rowData.nombre}) }}
+        onPress={()=>{Actions.inventaryDetailItem({item:rowData, title:rowData.name}) }}
       />
     )
   }
@@ -97,9 +104,11 @@ class InventaryPage extends Component {
     let text = this.state.text
     if (this.state.filter && text != ''){
       items = _.filter(items, function(o) {
-        if (o.nombre && o.nombre.toUpperCase().includes(text.toUpperCase())){
+        if (o.name && o.name.toUpperCase().includes(text.toUpperCase())){
           return true
-        }else if (o.descripcion && o.descripcion.toUpperCase().includes(text.toUpperCase())){
+        }else if (o.description && o.description.toUpperCase().includes(text.toUpperCase())){
+          return true
+        }else if (o.type && o.type.toUpperCase().includes(text.toUpperCase())){
           return true
         }else{
           return false
@@ -114,13 +123,21 @@ class InventaryPage extends Component {
   _renderList(){
     return(
       <View style={styles.list}>
+
         <ListView
+          ref='_scrollView'
+          style={styles.list}
           enableEmptySections={true}
           dataSource={this._getDataSource()}
           renderHeader={this._renderSearchHeader.bind(this)}
           renderFooter={this._renderFooter.bind(this)}
           renderRow={this._renderRow.bind(this)}
+          onScroll={this._handleScroll.bind(this)}
         />
+
+        <GotoUpButton
+          visible={this.state.showButtonUp}
+          onPress={() => { this.refs._scrollView.scrollTo({x:0,y:0,animated:true}); }}/>
       </View>
     )
   }
@@ -162,7 +179,7 @@ const styles = StyleSheet.create({
   },
   list:{
     flex:1,
-    backgroundColor:'#ececec'
+    backgroundColor:'transparent'
   },
   actionButtonIcon: {
     fontSize: 22*initialScale,

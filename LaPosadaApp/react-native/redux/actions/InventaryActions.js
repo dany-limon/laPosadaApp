@@ -52,40 +52,7 @@ export function deleteItem(item){
   }
 }
 
-/*
-* Añade un nuevo elemento al inventario
-*/
-export function addNewItem(stateObj){
-  return (dispatch, getState)=>{
-      const state = getState()
-      let firebase = state.appDataState.firebase
 
-      let item = {
-        nombre:stateObj.name,
-        descripcion:stateObj.description,
-        cantidad:stateObj.quantity,
-        exterior:stateObj.outside,
-      }
-
-      if (!stateObj.imageFile){
-        FirebaseUtils.addNewObject(firebase, ITEMS_PATH, item)
-        dispatch(updateLastUpdatedate())
-      }else{
-        FirebaseUtils.uploadMultipleImageResolutionFirebase(firebase, IMAGE_PATH, stateObj.imageFile)
-        .then((urls)=>{
-          item.imagen = urls.url
-          item.imagenMini = urls.urlMini
-          item.imagenMaxi = urls.urlMaxi
-          FirebaseUtils.addNewObject(firebase, ITEMS_PATH, item)
-          dispatch(updateLastUpdatedate())
-        }).catch((err) => {
-          console.log(err);
-          FirebaseUtils.addNewObject(firebase, ITEMS_PATH, item)
-          dispatch(updateLastUpdatedate())
-        });
-      }
-  }
-}
 
 
 /*
@@ -113,6 +80,36 @@ export function initialize(){
   }
 }
 
+/*
+* Añade un nuevo elemento al inventario
+*/
+export function addNewItem(stateObj){
+  return (dispatch, getState)=>{
+      const state = getState()
+      let firebase = state.appDataState.firebase
+
+      let item = {... stateObj}
+
+      if (!stateObj.imageFile){
+        FirebaseUtils.addNewObject(firebase, ITEMS_PATH, item)
+        dispatch(updateLastUpdatedate())
+      }else{
+        FirebaseUtils.uploadMultipleImageResolutionFirebase(firebase, IMAGE_PATH, stateObj.imageFile)
+        .then((urls)=>{
+          item.image = urls.url
+          item.imageMini = urls.urlMini
+          item.imageMaxi = urls.urlMaxi
+          FirebaseUtils.addNewObject(firebase, ITEMS_PATH, item)
+          dispatch(updateLastUpdatedate())
+        }).catch((err) => {
+          console.log(err);
+          FirebaseUtils.addNewObject(firebase, ITEMS_PATH, item)
+          dispatch(updateLastUpdatedate())
+        });
+      }
+  }
+}
+
 
 /*
 * Actualiza el elemento del inventario
@@ -126,24 +123,7 @@ export function updateItem(item, objState){
 
       let firebase = state.appDataState.firebase
       let itemPath = ITEMS_PATH + '/' + item.key
-      let object = { }
-      if (objState.name){
-        object.nombre = objState.name
-      }
-      if (objState.description){
-        object.descripcion = objState.description
-      }
-      if (objState.quantity){
-        object.cantidad = objState.quantity
-      }
-      if (objState.image){
-        object.imagen = objState.image
-      }
-      if (objState.outside==true){
-        object.exterior = true
-      }else{
-        object.exterior = false
-      }
+      let object = {...objState, }
 
       dispatch(updateLastUpdatedate())
 
@@ -152,9 +132,9 @@ export function updateItem(item, objState){
       }else{
         FirebaseUtils.uploadMultipleImageResolutionFirebase(firebase, IMAGE_PATH, objState.imageFile)
         .then((urls)=>{
-          object.imagen = urls.url
-          object.imagenMini = urls.urlMini
-          object.imagenMaxi = urls.urlMaxi
+          object.image = urls.url
+          object.imageMini = urls.urlMini
+          object.imageMaxi = urls.urlMaxi
           FirebaseUtils.updateObject(firebase, itemPath, object)
         }).catch(error => {
           console.log(error)

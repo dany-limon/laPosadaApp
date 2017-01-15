@@ -5,6 +5,7 @@ import Button from './Button'
 import LabelButton from './LabelButton'
 import SearchHeader from './SearchHeader'
 import PageIndicator from './PageIndicator'
+import GotoUpButton from './GotoUpButton'
 
 export {
   InputText,
@@ -13,5 +14,6 @@ export {
   Button,
   LabelButton,
   SearchHeader,
-  PageIndicator
+  PageIndicator,
+  GotoUpButton
 }

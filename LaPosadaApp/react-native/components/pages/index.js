@@ -7,6 +7,7 @@ import SplashPage from './SplashPage'
 import HomePage from './HomePage'
 import FullScreenPage from './commons/FullScreenPage'
 import StatutesPage from './statutes/StatutesPage'
+import MeetingsPage from './meetings/MeetingsPage'
 
 export {
   InventaryDetailItemPage,
@@ -17,5 +18,6 @@ export {
   SplashPage,
   HomePage,
   FullScreenPage,
-  StatutesPage
+  StatutesPage,
+  MeetingsPage,
 }

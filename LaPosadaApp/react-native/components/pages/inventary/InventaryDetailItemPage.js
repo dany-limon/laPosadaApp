@@ -10,6 +10,7 @@ import {InputText} from '../../widgets/'
 import Lightbox from 'react-native-lightbox'
 import PhotoView from 'react-native-photo-view'
 import * as AppFonts from '../../../commons/Fonts'
+import * as AppColors from '../../../commons/Colors'
 
 const IPHONE6_WIDTH = 375;
 const screenWidth = Dimensions.get('window').width
@@ -20,11 +21,12 @@ class InventaryDetailItemPage extends Component {
   constructor(props) {
       super(props);
       this.state = {
-        name: this.props.item.nombre,
-        description: this.props.item.descripcion,
-        quantity:this.props.item.cantidad,
-        image:this.props.item.imagen,
-        outside:this.props.item.exterior,
+        name: this.props.item.name,
+        description: this.props.item.description,
+        quantity:this.props.item.quantity,
+        image:this.props.item.image,
+        outside:this.props.item.outside,
+        type:this.props.item.type,
       }
     }
 
@@ -37,8 +39,8 @@ class InventaryDetailItemPage extends Component {
   }
 
   _renderImage(){
-    if (this.props.item.imagen){
-      let image = (this.props.item.imagenMaxi?this.props.item.imagenMaxi:this.props.item.imagen)
+    if (this.props.item.image){
+      let image = (this.props.item.imageMaxi?this.props.item.imageMaxi:this.props.item.image)
       let title = (this.state.name?this.state.name:'')
       console.log(image);
       return(
@@ -47,7 +49,7 @@ class InventaryDetailItemPage extends Component {
           <Image
             style={styles.image}
             resizeMode="cover"
-            source={{ uri: this.props.item.imagen }} />
+            source={{ uri: this.props.item.image }} />
         </TouchableOpacity>
       )
     }
@@ -71,6 +73,10 @@ class InventaryDetailItemPage extends Component {
           <View style={styles.infoContainer}>
             <Text style={styles.name}>
               {(this.state.name?this.state.name.toUpperCase():'')}
+            </Text>
+
+            <Text style={[styles.type, {color:AppColors.getColorFromType(this.state.type)}]}>
+              {(this.state.type?this.state.type.toUpperCase():'')}
             </Text>
 
             <Text style={styles.description}>
@@ -143,6 +149,14 @@ const styles = StyleSheet.create({
     marginTop:40*initialScale
   },
   description:{
+    fontFamily:AppFonts.regular,
+    fontSize:18*initialScale,
+    alignSelf:'center',
+    marginTop:10*initialScale,
+    textAlign:'center',
+    color:'#000000AA'
+  },
+  type:{
     fontFamily:AppFonts.regular,
     fontSize:18*initialScale,
     alignSelf:'center',

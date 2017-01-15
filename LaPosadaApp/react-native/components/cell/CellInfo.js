@@ -1,7 +1,8 @@
 'use strict'
 
 import React, { Component, } from 'react'
-import {StyleSheet, Dimensions, Text, View, ListView, Image, TouchableOpacity} from 'react-native'
+import {StyleSheet, Dimensions, Text, View, ListView, Image, TouchableHighlight,
+  TouchableOpacity} from 'react-native'
 import * as AppFonts from '../../commons/Fonts'
 import * as AppColors from '../../commons/Colors'
 import {Actions} from 'react-native-router-flux'
@@ -39,7 +40,11 @@ export default class CellInfo extends Component {
   _renderHeader(){
     if (this.props.header){
       return(
-        <Text style={styles.header}> {this.props.header} </Text>
+        <Text style={[styles.header,{color:AppColors.getColorFromType(this.props.header)}]}> {this.props.header.toUpperCase()} </Text>
+      )
+    }else{
+      return(
+        <View style={{height:25*initialScale}}/>
       )
     }
   }
@@ -47,17 +52,17 @@ export default class CellInfo extends Component {
   _renderTitle(){
     if (this.props.title){
       return(
-        <Text style={styles.title} numberOfLines={1}>{this.props.title}</Text>
+        <Text style={styles.title} numberOfLines={2}>{this.props.title}</Text>
       )
     }
   }
 
   _renderSubtitle(){
-    if (this.props.subtitle){
-      return(
-        <Text style={styles.subtitle} numberOfLines={1}>{this.props.subtitle}</Text>
-      )
-    }
+    // if (this.props.subtitle){
+    //   return(
+    //     <Text style={styles.subtitle} numberOfLines={1}>{this.props.subtitle}</Text>
+    //   )
+    // }
   }
 
   _renderInfo(){
@@ -112,7 +117,7 @@ export default class CellInfo extends Component {
 
   render() {
     return(
-      <TouchableOpacity style={styles.container} onPress={this.props.onPress}>
+      <TouchableOpacity style={styles.container} onPress={this.props.onPress} activeOpacity={0.5}>
           {this._renderHeader()}
           <View style={styles.mainContainer}>
               {this._renderImage()}
@@ -144,16 +149,16 @@ const styles = StyleSheet.create({
     borderWidth:1
   },
   title:{
-    fontSize:20*initialScale,
+    fontSize:18*initialScale,
     fontFamily:AppFonts.bold
   },
   subtitle:{
-    fontSize:16*initialScale,
+    fontSize:14*initialScale,
     marginTop:3*initialScale,
     fontFamily:AppFonts.regular
   },
   info:{
-    fontSize:20*initialScale,
+    fontSize:14*initialScale,
     fontFamily:AppFonts.medium
   },
   button:{
@@ -167,7 +172,8 @@ const styles = StyleSheet.create({
     paddingTop:15*initialScale,
     paddingBottom:15*initialScale,
     paddingRight:15*initialScale,
-    fontFamily:AppFonts.lightItalic
+    fontFamily:AppFonts.lightItalic,
+    fontSize:14*initialScale,
   },
   actionContainer:{
     padding:15*initialScale
@@ -190,7 +196,7 @@ const styles = StyleSheet.create({
   centerContainer:{
     flex:1,
     alignSelf:'center',
-    marginLeft:10*initialScale
+    marginLeft:15*initialScale
   },
   mainContainer:{
     flexDirection:'row',

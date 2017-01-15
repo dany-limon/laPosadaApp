@@ -125,15 +125,6 @@ export function uploadImageFileToFirebase(firebase, folder, file){
     })
 }
 
-// Actualiza un nuevo objeto a la ruta
-//  @param firebase Objeto firebase inicializado
-//  @param path ruta destino
-//  @param item objeto a subir
-export function updateObject(firebase, path, object){
-  let fbDatabaseRef = firebase.database().ref()
-  let updateItemRef = fbDatabaseRef.child(path)
-  updateItemRef.update(object)
-}
 
 // Recupera un objeto cacheado (disco) con la clave
 //  @param key Clave del objeto
@@ -190,4 +181,27 @@ export function uploadMultipleImageResolutionFirebase(firebase, folder, imageUri
       reject(error)
     });
   })
+}
+
+// Actualiza un nuevo objeto a la ruta
+//  @param firebase Objeto firebase inicializado
+//  @param path ruta destino
+//  @param item objeto a subir
+export function updateObject(firebase, path, object){
+
+  //Quitar los parametros nulos para que no pete FirebaseUtils
+  let deleteKeys = []
+  for(var key in object) {
+    if (!object[key]){
+      deleteKeys.push(key)
+    }
+  }
+
+  deleteKeys.map((key)=>{
+    delete object[key]
+  })
+
+  let fbDatabaseRef = firebase.database().ref()
+  let updateItemRef = fbDatabaseRef.child(path)
+  updateItemRef.update(object)
 }

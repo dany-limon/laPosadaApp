@@ -5,7 +5,7 @@ import {StyleSheet, Dimensions, View, Text} from 'react-native'
 import * as AppFonts from '../../commons/Fonts'
 import * as AppColors from '../../commons/Colors'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
-import {InventaryPage, StatutesPage} from './'
+import {InventaryPage, StatutesPage, MeetingsPage} from './'
 import {TabBar} from '../widgets/'
 
 
@@ -18,16 +18,15 @@ export default class HomePage extends Component {
     return(
       <View style={styles.container}>
         <ScrollableTabView
-          style={{flex:1}}
-          locked={true}
+          style={{flex:1, backgroundColor:AppColors.backgroundList}}
           tabBarUnderlineStyle = {{backgroundColor:AppColors.main}}
           tabBarActiveTextColor = {AppColors.main}
           tabBarInactiveTextColor = {AppColors.lightGray}
           tabBarTextStyle = {{ fontSize:20*initialScale, paddingTop:5}}
-          >
-             <InventaryPage tabLabel = 'Inventario'/>
+          tabBarBackgroundColor={'white'} >
              <StatutesPage tabLabel = 'Estatutos'/>
-             <View tabLabel = 'Reuniones'/>
+             <MeetingsPage tabLabel = 'Reuniones'/>
+             <InventaryPage tabLabel = 'Inventario'/>
         </ScrollableTabView>
       </View>
     )

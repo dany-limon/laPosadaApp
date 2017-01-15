@@ -18,11 +18,12 @@ class InventaryEditItemPage extends Component {
   constructor(props) {
       super(props);
       this.state = {
-        name: (this.props.item?this.props.item.nombre:null),
-        description:  (this.props.item?this.props.item.descripcion:null),
-        quantity: (this.props.item?this.props.item.cantidad:null),
-        image: (this.props.item?this.props.item.imagen:null),
-        outside: (this.props.item?this.props.item.exterior:null),
+        name: (this.props.item?this.props.item.name:null),
+        description:  (this.props.item?this.props.item.description:null),
+        quantity: (this.props.item?this.props.item.quantity:null),
+        image: (this.props.item?this.props.item.image:null),
+        outside: (this.props.item?this.props.item.outside:false),
+        type:(this.props.item?this.props.item.type:'OTROS'),
         image64:null,
         imageFile:null
       }
@@ -129,6 +130,13 @@ class InventaryEditItemPage extends Component {
             label={'Descripción'}
             onChangeText={(description) => this.setState({description})}
             value={this.state.description}/>
+
+          <View style={{height:20*initialScale}}/>
+          <InputText
+            label={'Tipo'}
+            onChangeText={(type) => this.setState({type})}
+            value={this.state.type}/>
+
 
           <View style={{height:20*initialScale}}/>
           <InputText
