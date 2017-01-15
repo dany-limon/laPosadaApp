@@ -9,8 +9,6 @@ const PATH = 'inventario'
 const ITEMS_PATH = PATH + '/elementos'
 const IMAGE_PATH = 'imagenes/inventario'
 
-
-
 /*
 * Actualiza los items del inventario
 * @param items Array de objetos del inventario
@@ -19,6 +17,31 @@ function updateItems(items){
   return {
     type: types.INVENTARY_UPDATE_ITEMS,
     items:items
+  }
+}
+
+/*
+* Inicializa para recibir los items del inventario de Firebase
+*/
+export function initialize(){
+
+  return (dispatch, getState)=>{
+
+      const state = getState()
+      let firebase = state.appDataState.firebase
+
+      //Recuperar datos cacheados
+      FirebaseUtils.getCacheObject(PATH)
+      .then((items)=>{
+        dispatch(updateItems(items))
+      })
+
+      //Obtener datos desde Firebase
+      firebase.database().ref(ITEMS_PATH).on('value', (snap) => {
+        let items = FirebaseUtils.getArrayFromSnap(snap)
+        dispatch(updateItems(items))
+        FirebaseUtils.storeCacheObject(PATH, items)
+      })
   }
 }
 
@@ -52,34 +75,6 @@ export function deleteItem(item){
   }
 }
 
-
-
-
-/*
-* Inicializa para recibir los items del inventario de Firebase
-*/
-export function initialize(){
-
-  return (dispatch, getState)=>{
-
-      const state = getState()
-      let firebase = state.appDataState.firebase
-
-      //Recuperar datos cacheados
-      FirebaseUtils.getCacheObject(PATH)
-      .then((items)=>{
-        dispatch(updateItems(items))
-      })
-
-      //Obtener datos desde Firebase
-      firebase.database().ref(ITEMS_PATH).on('value', (snap) => {
-        let items = FirebaseUtils.getArrayFromSnap(snap)
-        dispatch(updateItems(items))
-        FirebaseUtils.storeCacheObject(PATH, items)
-      })
-  }
-}
-
 /*
 * Añade un nuevo elemento al inventario
 */
@@ -109,7 +104,6 @@ export function addNewItem(stateObj){
       }
   }
 }
-
 
 /*
 * Actualiza el elemento del inventario

@@ -2,13 +2,17 @@
 
 import React, { Component, } from 'react'
 import {StyleSheet, Dimensions, View, ListView, TouchableHighlight} from 'react-native'
-import { connect } from 'react-redux'
+
 import ViewPager from 'react-native-viewpager';
 import {PageIndicator, SearchHeader, GotoUpButton} from '../../widgets/'
 import {HtmlTextInfoCell} from '../../cell/'
 import * as AppFonts from '../../../commons/Fonts'
 import * as AppColors from '../../../commons/Colors'
+
 import _ from 'lodash'
+
+import { connect } from 'react-redux'
+import * as StatutesActions from '../../../redux/actions/StatutesActions'
 
 const IPHONE6_WIDTH = 375;
 const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
@@ -19,11 +23,15 @@ class StatutesPage extends Component {
         super(props);
 
         this.state = {
-          text: '' ,      
+          text: '' ,
           filter:false,
           showButtonUp:false,
         };
       }
+
+    componentDidMount() {
+        this.props.initializeStatutes()
+    }
 
     _renderRow(rowData, sectionID, rowID, highlightRow){
       return(
@@ -118,6 +126,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, props) {
   return {
+    initializeStatutes:()=>{
+      dispatch(StatutesActions.initialize())
+    },
     dispatch:dispatch
   };
 }

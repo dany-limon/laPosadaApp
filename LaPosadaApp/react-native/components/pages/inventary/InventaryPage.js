@@ -4,16 +4,21 @@ import React, { Component, } from 'react'
 import {StyleSheet, Dimensions, Text, View, ListView, Image, TouchableOpacity,
   TextInput, Alert} from 'react-native'
 import {Modal, Actions, Scene, Router} from 'react-native-router-flux'
-import { connect } from 'react-redux'
-import ActionButton from 'react-native-action-button'
-import Icon from 'react-native-vector-icons/Ionicons'
-import _ from 'lodash'
-import * as InventaryActions from '../../../redux/actions/InventaryActions'
-import * as AppDataActions from '../../../redux/actions/AppDataAction'
+
 import {CellInfo} from '../../cell/'
 import {SearchHeader, GotoUpButton} from '../../widgets/'
 import * as AppColors from '../../../commons/Colors'
 import * as AppFonts from '../../../commons/Fonts'
+
+import ActionButton from 'react-native-action-button'
+import Icon from 'react-native-vector-icons/Ionicons'
+import _ from 'lodash'
+
+import { connect } from 'react-redux'
+import * as InventaryActions from '../../../redux/actions/InventaryActions'
+import * as AppDataActions from '../../../redux/actions/AppDataAction'
+
+
 
 const IPHONE6_WIDTH = 375;
 const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
@@ -45,7 +50,6 @@ class InventaryPage extends Component {
   _renderNoData(){
     return (
       <View style={{flex:1, justifyContent:'center', backgroundColor:'#ececec'}}>
-
       </View>
     )
   }
