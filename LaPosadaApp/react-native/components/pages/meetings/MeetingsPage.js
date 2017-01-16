@@ -29,10 +29,6 @@ class MeetingsPage extends Component {
       };
     }
 
-  componentDidMount() {
-      this.props.initializeMeetings()
-  }
-
   _renderRow(rowData, sectionID, rowID, highlightRow){
     return(
       <HtmlTextInfoCell data={rowData} />
@@ -127,9 +123,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, props) {
   return {
-    initializeMeetings:()=>{
-      dispatch(MeetingsActions.initialize())
-    },
     dispatch:dispatch
   };
 }

@@ -64,6 +64,10 @@ class LaPosadaApp extends Component {
     }
 
     getNavBarOffset(){
+      if (!this.props.paddingScenes){
+        return 0
+      }
+      
       var offset = 0
       if (Platform.OS === 'ios'){
         offset = 20
@@ -102,6 +106,7 @@ class LaPosadaApp extends Component {
 function mapStateToProps(state) {
   return {
     fbDataBase:state.appDataState.fbDataBase,
+    paddingScenes:state.appDataState.paddingScenes,
   }
 }
 

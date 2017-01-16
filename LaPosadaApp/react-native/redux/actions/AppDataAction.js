@@ -3,6 +3,15 @@ import * as FirebaseUtils from '../../utils/FirebaseUtils'
 import { Actions } from 'react-native-router-flux'
 import { Alert } from 'react-native'
 
+
+//Actualiza el pading superior de las escenas para que el navbar no las tape
+function addScenesPadding(paddingScenes=true) {
+  return {
+    type: types.APP_ADD_PADDING,
+    paddingScenes:paddingScenes
+  }
+}
+
 //*************************************************
 // Firebase
 //*************************************************
@@ -90,10 +99,13 @@ export function resendToEmailPassword(email){
 function initializeFirebase(dispatch){
   dispatch(updateFirebaseRef(firebaseApp))
 
-  // dispatch(closeSesion())
-
   //detectamos el estado del usuario
   firebaseApp.auth().onAuthStateChanged(function(user) {
+
+    //Mostrar padding en escenas
+    dispatch(addScenesPadding())
+
+    //Mostramos la pantalla correspondiente
     if (user) {
       Actions.home()
     } else {

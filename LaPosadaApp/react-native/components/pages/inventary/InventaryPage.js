@@ -16,8 +16,6 @@ import _ from 'lodash'
 
 import { connect } from 'react-redux'
 import * as InventaryActions from '../../../redux/actions/InventaryActions'
-import * as AppDataActions from '../../../redux/actions/AppDataAction'
-
 
 
 const IPHONE6_WIDTH = 375;
@@ -34,10 +32,6 @@ class InventaryPage extends Component {
         showButtonUp:false,
       };
     }
-
-  componentDidMount() {
-      this.props.initializeInventary()
-  }
 
   _handleDelete(item){
     Alert.alert(  'Eliminar ' + item.nombre,
@@ -208,9 +202,6 @@ function mapDispatchToProps(dispatch, props) {
     },
     deleteItem:(item)=>{
       dispatch(InventaryActions.deleteItem(item))
-    },
-    closeSesion:()=>{
-      dispatch(AppDataActions.closeSesion())
     },
     dispatch:dispatch
   };

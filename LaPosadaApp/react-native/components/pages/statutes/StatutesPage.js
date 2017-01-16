@@ -29,10 +29,6 @@ class StatutesPage extends Component {
         };
       }
 
-    componentDidMount() {
-        this.props.initializeStatutes()
-    }
-
     _renderRow(rowData, sectionID, rowID, highlightRow){
       return(
         <HtmlTextInfoCell data={rowData} />

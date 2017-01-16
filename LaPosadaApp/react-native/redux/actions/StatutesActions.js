@@ -33,12 +33,16 @@ export function initialize(){
       FirebaseUtils.getCacheObject(PATH)
       .then((items)=>{
         dispatch(updateItems(items))
+        console.log('statutes',items);
+      }).catch((error)=>{
+        console.log('statutes',error);
       })
 
       //Obtener datos desde Firebase
       firebase.database().ref(ITEMS_PATH).on('value', (snap) => {
         let items = FirebaseUtils.getArrayFromSnap(snap)
         dispatch(updateItems(items))
+        FirebaseUtils.storeCacheObject(PATH, items)
       })
   }
 }
