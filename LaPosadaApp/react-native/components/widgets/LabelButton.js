@@ -36,13 +36,13 @@ export default class LabelButton extends Component {
 //*************************************************
 const styles = StyleSheet.create({
   container: {
-    marginTop:15*initialScale
+    marginTop:15
   },
   label:{
     alignSelf:'center',
     padding:10,
     color:AppColors.main,
-    fontSize:16*initialScale,
+    fontSize:16,
     fontFamily:AppFonts.regular
   }
 })

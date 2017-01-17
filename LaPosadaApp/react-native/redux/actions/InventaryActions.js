@@ -27,17 +27,21 @@ export function initialize(){
 
   return (dispatch, getState)=>{
 
+    console.log('inicializando inventario');
+
       const state = getState()
       let firebase = state.appDataState.firebase
 
       //Recuperar datos cacheados
       FirebaseUtils.getCacheObject(PATH)
       .then((items)=>{
+        console.log('inventario-cache', items);
         dispatch(updateItems(items))
       })
 
       //Obtener datos desde Firebase
       firebase.database().ref(ITEMS_PATH).on('value', (snap) => {
+        console.log('inventario-firebase', items);
         let items = FirebaseUtils.getArrayFromSnap(snap)
         dispatch(updateItems(items))
         FirebaseUtils.storeCacheObject(PATH, items)

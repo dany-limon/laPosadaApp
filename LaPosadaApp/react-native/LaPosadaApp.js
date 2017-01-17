@@ -67,7 +67,7 @@ class LaPosadaApp extends Component {
       if (!this.props.paddingScenes){
         return 0
       }
-      
+
       var offset = 0
       if (Platform.OS === 'ios'){
         offset = 20
@@ -90,11 +90,11 @@ class LaPosadaApp extends Component {
             scenes={scenes}
             sceneStyle={{paddingTop: this.getNavBarOffset()}}
             navigationBarStyle={{backgroundColor:'#722f37'}}
-            titleStyle={{color:'white', fontFamily:AppFonts.medium, fontSize:20*initialScale, backgroundColor:'transparent'}}
-            rightButtonTextStyle={{color:'white', fontFamily:AppFonts.light, fontSize:18*initialScale, backgroundColor:'transparent'}}
+            titleStyle={{color:'white', fontFamily:AppFonts.medium, fontSize:20, backgroundColor:'transparent'}}
+            rightButtonTextStyle={{color:'white', fontFamily:AppFonts.light, fontSize:18, backgroundColor:'transparent'}}
             hideBackImage={true}
             backTitle={'Atrás'}
-            backButtonTextStyle={{color:'white', fontFamily:AppFonts.light, fontSize:18*initialScale, backgroundColor:'transparent'}}
+            backButtonTextStyle={{color:'white', fontFamily:AppFonts.light, fontSize:18, backgroundColor:'transparent'}}
            />
       )
     }

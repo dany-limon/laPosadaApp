@@ -22,7 +22,7 @@ export default class HomePage extends Component {
           tabBarUnderlineStyle = {{backgroundColor:AppColors.main}}
           tabBarActiveTextColor = {AppColors.main}
           tabBarInactiveTextColor = {AppColors.lightGray}
-          tabBarTextStyle = {{ fontSize:20*initialScale, paddingTop:5}}
+          tabBarTextStyle = {{ fontSize:20, paddingTop:5}}
           tabBarBackgroundColor={'white'} >
              <StatutesPage tabLabel = 'Estatutos'/>
              <MeetingsPage tabLabel = 'Reuniones'/>

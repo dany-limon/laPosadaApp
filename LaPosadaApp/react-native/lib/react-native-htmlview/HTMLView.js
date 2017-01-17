@@ -7,8 +7,11 @@ var {
   Linking,
   StyleSheet,
   Text,
+  Dimensions
 } = ReactNative
 
+const IPHONE6_WIDTH = 375;
+const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
 
 var HTMLView = React.createClass({
   propTypes: {
@@ -74,47 +77,47 @@ var HTMLView = React.createClass({
 var baseStyles = StyleSheet.create({
   h1:{
     fontFamily:AppFonts.bold,
-    fontSize:20,
+    fontSize:20*initialScale,
   },
   h2:{
     fontFamily:AppFonts.lightItalic,
-    fontSize:18,
+    fontSize:18*initialScale,
   },
   b: {
     fontWeight: '800',
-    fontSize:18,
+    fontSize:18*initialScale,
   },
   p:{
     fontFamily:AppFonts.regular,
-    fontSize:18
+    fontSize:18*initialScale
   },
   strong: {
     fontWeight: '700',
     fontFamily:AppFonts.regular,
     color:AppColors.main,
-    fontSize:18
+    fontSize:18*initialScale
   },
   i: {
     fontFamily:AppFonts.lightItalic,
-    fontSize:18
+    fontSize:18*initialScale
   },
   em: {
     fontFamily:AppFonts.medium,
-    fontSize:18
+    fontSize:18*initialScale
   },
   pre: {
     fontFamily:AppFonts.regular,
-    fontSize:18,
+    fontSize:18*initialScale,
     color:AppColors.main,
   },
   code: {
     fontFamily:AppFonts.regular,
-    fontSize:18,
+    fontSize:18*initialScale,
     backgroundColor:'yellow',
   },
   li:{
     fontFamily:AppFonts.italic,
-    fontSize:18
+    fontSize:18*initialScale
   },
   a: {
     fontFamily:AppFonts.regular,

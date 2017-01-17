@@ -50,12 +50,12 @@ export default class InputText extends Component {
 const styles = StyleSheet.create({
   inputStyle: {
     color: AppColors.black,
-    fontSize:20*initialScale,
+    fontSize:20,
     fontFamily:AppFonts.regular
   },
   labelStyle:{
     color:AppColors.gray,
-    fontSize:16*initialScale,
+    fontSize:16,
     fontFamily:AppFonts.light
   }
 })

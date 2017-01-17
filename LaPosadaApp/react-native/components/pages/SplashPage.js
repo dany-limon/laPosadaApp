@@ -8,19 +8,13 @@ import * as AppColors from '../../commons/Colors'
 import * as AppImages from '../../commons/Images'
 
 import { connect } from 'react-redux'
-import * as AppDataActions from '../../redux/actions/AppDataAction'
-import * as InventaryActions from '../../redux/actions/InventaryActions'
-import * as MeetingsActions from '../../redux/actions/MeetingsActions'
-import * as StatutesActions from '../../redux/actions/StatutesActions'
 
 const IPHONE6_WIDTH = 375;
 const initialScale = Dimensions.get('window').width / IPHONE6_WIDTH
 
 class SplashPage extends Component {
 
-  componentDidMount() {
-      this.props.initialize()
-  }
+
 
   render() {
     return(
@@ -61,11 +55,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, props) {
   return {
-    initialize:()=>{
-      dispatch(StatutesActions.initialize())
-      dispatch(InventaryActions.initialize())
-      dispatch(MeetingsActions.initialize())
-    },
     dispatch:dispatch
   };
 }

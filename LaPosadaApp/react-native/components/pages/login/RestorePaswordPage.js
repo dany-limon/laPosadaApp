@@ -61,7 +61,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch, props) {
   return {
     login:(email)=>{
-      dispatch(AppDataActions.resendToEmailPassword(email))
+      dispatch(AppDataActions.resendToEmailPassword(email.toLowerCase()))
       Actions.pop()
     },
     dispatch:dispatch

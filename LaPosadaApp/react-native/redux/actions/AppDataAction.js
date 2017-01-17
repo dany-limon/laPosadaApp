@@ -3,6 +3,9 @@ import * as FirebaseUtils from '../../utils/FirebaseUtils'
 import { Actions } from 'react-native-router-flux'
 import { Alert } from 'react-native'
 
+import * as InventaryActions from './InventaryActions'
+import * as MeetingsActions from './MeetingsActions'
+import * as StatutesActions from './StatutesActions'
 
 //Actualiza el pading superior de las escenas para que el navbar no las tape
 function addScenesPadding(paddingScenes=true) {
@@ -70,10 +73,7 @@ export function login(email, password){
         setTimeout(() => {
           dispatch(updateLoginProgress(false))
         }, 500);
-
       });
-
-
     }
 }
 
@@ -107,7 +107,15 @@ function initializeFirebase(dispatch){
 
     //Mostramos la pantalla correspondiente
     if (user) {
-      Actions.home()
+      dispatch(StatutesActions.initialize())
+      dispatch(InventaryActions.initialize())
+      dispatch(MeetingsActions.initialize())
+
+      setTimeout(() => {
+        Actions.home()
+      }, 1000);
+
+
     } else {
       Actions.login()
     }

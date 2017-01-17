@@ -37,12 +37,12 @@ export default class Button extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor:AppColors.main,
-    padding:15*initialScale,
-    borderRadius:15*initialScale
+    padding:15,
+    borderRadius:15
   },
   label:{
     alignSelf:'center',
-    fontSize:20*initialScale,
+    fontSize:20,
     color:AppColors.white,
     fontFamily:AppFonts.medium
   }
